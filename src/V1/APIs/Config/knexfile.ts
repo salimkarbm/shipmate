@@ -34,7 +34,7 @@ const config: { [key: string]: Knex.Config } = {
         client: 'postgresql',
         connection: {
             database: `${PRODDB}`,
-            user: `${POSTGRES_USER}`,
+            user: `${PRODDBUSER}`,
             password: `${PRODDBPASSWORD}`,
         },
         pool: {
