@@ -1,5 +1,5 @@
 {
-    "name": "shipMate",
+    "name": "shipmate",
     "version": "1.0.0",
     "description": "An interstate delivcery platform for people to send items to other geographical states through individuals travelling to those locations.",
     "main": "app.js",
