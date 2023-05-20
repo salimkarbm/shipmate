@@ -14,6 +14,7 @@ const {
     GMAIL_USERNAME,
     GMAIL_PASSWORD,
     GMAIL_HOST,
+    GMAIL_PORT
 } = process.env;
 
 export interface Mail {
@@ -41,7 +42,7 @@ export default class Email {
             const transporter = nodemailer.createTransport({
                 service: SERVICE_NAME,
                 host: GMAIL_HOST,
-                port: Number(MAILER_PORT),
+                port: Number(GMAIL_PORT),
                 auth: {
                     user: GMAIL_USERNAME,
                     pass: GMAIL_PASSWORD,

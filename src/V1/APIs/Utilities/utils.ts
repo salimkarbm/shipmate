@@ -2,7 +2,7 @@ import 'dotenv/config';
 import bcrypt from 'bcrypt';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import UserRepository from '../Repository/User/userRepository';
-import { AppError } from './Errors/appError';
+
 
 const userRepository = new UserRepository();
 
@@ -38,7 +38,7 @@ export class utils {
             const decoded: JwtPayload = jwt.decode(refreshToken) as JwtPayload;
               const expirationTime = decoded.exp as number; 
                const currentTime = new Date().getTime() / 1000; 
-            if (expirationTime < currentTime) {
+            if (expirationTime < currentTime  && decoded.email !== email) {
                 // token has expired
                 return false;
             } else {

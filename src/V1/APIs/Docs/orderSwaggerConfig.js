@@ -4,7 +4,7 @@ const swaggerOptions = {
             title: 'Delivery Order Manager API',
             description: 'For Delivery Management',
             contact: {
-                name: 'shipMate',
+                name: 'shipmate',
             },
             servers: ['http://localhost:3000'],
         },

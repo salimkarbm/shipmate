@@ -3,9 +3,9 @@ import orderRouteDoc from './order.docs';
 const swaggerDocumentation = {
     openapi: '3.0.3',
     info: {
-        title: 'shipMate',
+        title: 'ShipMate',
         version: '0.0.1',
-        description: 'shipMate Documentations',
+        description: 'ShipMate Documentations',
     },
     servers: [
         {
@@ -13,7 +13,7 @@ const swaggerDocumentation = {
             description: 'Local dev',
         },
         {
-            url: 'http://production',
+            url: 'https://shipmate-7h6p.onrender.com',
             description: 'Production dev',
         },
     ],
