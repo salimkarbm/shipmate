@@ -14,7 +14,7 @@ const {
     GMAIL_USERNAME,
     GMAIL_PASSWORD,
     GMAIL_HOST,
-    GMAIL_PORT
+    GMAIL_PORT,
 } = process.env;
 
 export interface Mail {
@@ -75,7 +75,7 @@ export default class Email {
     }
 
     async sendWelcome(options: Mail) {
-        const message = `<p>Welcome to Ubefu ${options.firstName},
+        const message = `<p>Welcome to Shipmate ${options.firstName},
         your account have been activated. Kindly login to continue<p>`;
         return await this.sendEmail(options, message);
     }

@@ -7,6 +7,9 @@ import {
     forgotPassword,
     resetPassword,
     verifyRefreshToken,
+    googleAuth,
+    googleAuthURL,
+    //facebookAuth
 } from '../../Controllers/Auth/auth.controller';
 import { validate } from '../../Middlewares/validateRequest.middleware';
 import {
@@ -21,6 +24,9 @@ import {
 const auth = Router();
 
 auth.post('/register', registerValidationRules(), validate, create);
+auth.post('/google', googleAuth);
+auth.get('/google-login-url', googleAuthURL);
+//auth.post('/auth/facebook', facebookAuth);
 
 auth.post('/login', loginValidationRules(), validate, login);
 auth.post(

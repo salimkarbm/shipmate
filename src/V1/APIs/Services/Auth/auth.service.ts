@@ -16,6 +16,90 @@ const mail = new Email();
 dotenv.config({ path: './src/V1/APIs/Config/.env' });
 
 export default class AuthService {
+    public googleAuthURL = async (
+        req: Request,
+        next: NextFunction
+    ): Promise<void | string> => {
+        const url = util.getGoogleAuthURL(req);
+        if (!url) {
+            throw next(new AppError('Could not get google url', 500));
+        }
+        return url;
+    };
+
+    public async googleAuth(req: Request, next: NextFunction) {
+        const { name, email, picture, contact } = await util.getTokens(
+            req,
+            next
+        );
+        const userExist = await userRepository.findUserByEmail(email);
+        if (userExist) {
+            const { accessToken, refreshToken } =
+                await util.generateAccessToken(userExist.email);
+            return { accessToken, refreshToken, userExist };
+        } else {
+            const newName = name.split(' ');
+
+            const data: UserType = {
+                first_name: newName[0],
+                last_name: newName[1],
+                email: email,
+                phone_number: 1233456789,
+                password_digest: '',
+                user_type: 'user',
+                is_verified: true,
+            };
+            const newUser = await authRepository.createUser(data);
+            const { accessToken, refreshToken } =
+                await util.generateAccessToken(newUser.email);
+            await mail.sendWelcome({
+                firstName: data.first_name,
+                email: data.email,
+                subject: 'Welcome to Shipmate',
+            });
+            return { accessToken, refreshToken, newUser };
+        }
+    }
+
+    // public async facebookAuth(req: Request, next: NextFunction) {
+    //   const { token } = req.body;
+    //   const { data } = await axios.get(
+    //     `https://graph.facebook.com/me?access_token=${token}&fields=name,email,id`
+    //   );
+    //   if (Object.keys(data).length === 0) {
+    //     return next(new AppError('Invalid credentials, please try again.', 401));
+    //   }
+    //   const name = data.name.split(' ');
+    //   return (async () => {
+    //     let newUser;
+    //     const password = 'xxxxxxxxxx';
+    //     const hashPassword = await util.generateHash(password);
+    //     const user: any = {
+    //       first_name: name[0],
+    //       last_name: name[1],
+    //       email: data.email,
+    //       password_digest: hashPassword,
+    //       facebook_id: data.id,
+    //     };
+
+    //     const userExist = await userRepository.findUserByEmail(user.email);
+    //     if (!userExist) {
+    //       newUser = await authRepository.createFacebookUser(user);
+    //       await authRepository.updateUserIsVerifiedColumn(user.email);
+    //       const { accessToken, refreshToken } = await util.generateToken(
+    //         newUser.email
+    //       );
+    //       return { accessToken, refreshToken, newUser };
+    //     } else if (userExist) {
+    //       newUser = await userRepository.findUserByEmail(userExist[0].email);
+    //       const { accessToken, refreshToken } = await util.generateToken(
+    //         userExist[0].email
+    //       );
+    //       return { accessToken, refreshToken, newUser };
+    //     }
+    //   })();
+    //}
+
     public async registerUser(
         req: Request,
         next: NextFunction
@@ -128,15 +212,11 @@ export default class AuthService {
         }
         const modifyUser: false | UserType[] | User[] =
             await authRepository.activateAccount({ code, email });
-
-        const message = `<p>Welcome to Shipmate ${user.first_name}
-                             your account have been activated.<p>`;
         if (modifyUser) {
             const userInfo = {
                 firstName: user.first_name,
                 email: user.email,
                 subject: 'Welcome to Shipmate',
-                message,
             };
             return await mail.sendWelcome(userInfo);
         }

@@ -4,6 +4,67 @@ import { AppError } from '../../Utilities/Errors/appError';
 import { response } from '../../Utilities/response';
 const authService = new AuthService();
 
+export const googleAuthURL = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const url: any = await authService.googleAuthURL(req, next);
+        if (url) {
+            return res.status(201).json({
+                status: 'success',
+                message: 'Google Authentication URL Sent',
+                url,
+            });
+        }
+    } catch (err) {
+        return next(
+            new AppError(`something went wrong here is the error ${err}`, 500)
+        );
+    }
+};
+
+export const googleAuth = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const user: any = await authService.googleAuth(req, next);
+        if (user) {
+            return res.status(201).json({
+                status: 'success',
+                message: 'User successfully login.',
+            });
+        }
+    } catch (err) {
+        return next(
+            new AppError(`something went wrong here is the error ${err}`, 500)
+        );
+    }
+};
+
+//   export const facebookAuth = async (
+//     req: Request,
+//     res: Response,
+//     next: NextFunction
+//   ) => {
+//     try {
+//       const user: any = await authService.facebookAuth(req, next);
+//       if (user) {
+//         return res.status(201).json({
+//           status: 'success',
+//           message: 'User successfully login.',
+//         });
+//       }
+//     } catch (err) {
+//       return next(
+//         new AppError(`something went wrong here is the error ${err}`, 500)
+//       );
+//     }
+//   };
+
 export const create = async (
     req: Request,
     res: Response,

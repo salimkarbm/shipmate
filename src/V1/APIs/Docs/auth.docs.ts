@@ -91,11 +91,11 @@ const user = [
     {
         success: false,
         message: 'Expired token please login',
-      },
-      {
+    },
+    {
         success: true,
         message: 'refresh token verification successful',
-      },
+    },
 ];
 
 const createUser = {
@@ -229,59 +229,60 @@ const refreshToken = {
     description: 'Verify user refresh token',
     security: [{ bearerAuth: [] }], // require a bearer token for this route
     requestBody: {
-      content: {
-        'application/json': {
-          schema: {
-            type: 'object',
-            properties: {
-              refreshToken: {
-                type: 'string',
-                description: 'refresh token of the user',
-                example:
-                  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjNiMDJiOGM3ZmZiZTIwMTU4ZjczN2JmIiwicm9sZSI6InVzZXIiLCJlbWFpbCI6InNhbGltaW11emFpQGdtYWlsLmNvbSIsIm5hbWUiOiJrYXJibSBrYXJibSIsImlhdCI6MTY3Mjk2MDAzOCwiZXhwIjoxNjczMDQ2NDM4fQ.iA0SNazm5YkVWE3PQ3Q_NdzMQMQGADPrajn1eP4bs1A',
-              },
-              email: {
-                type: 'string',
-                description: 'Email of the user',
-                example: 'salim@gmail.com',
-              },
+        content: {
+            'application/json': {
+                schema: {
+                    type: 'object',
+                    properties: {
+                        refreshToken: {
+                            type: 'string',
+                            description: 'refresh token of the user',
+                            example:
+                                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNjNiMDJiOGM3ZmZiZTIwMTU4ZjczN2JmIiwicm9sZSI6InVzZXIiLCJlbWFpbCI6InNhbGltaW11emFpQGdtYWlsLmNvbSIsIm5hbWUiOiJrYXJibSBrYXJibSIsImlhdCI6MTY3Mjk2MDAzOCwiZXhwIjoxNjczMDQ2NDM4fQ.iA0SNazm5YkVWE3PQ3Q_NdzMQMQGADPrajn1eP4bs1A',
+                        },
+                        email: {
+                            type: 'string',
+                            description: 'Email of the user',
+                            example: 'salim@gmail.com',
+                        },
+                    },
+                },
             },
-          },
         },
-      },
     },
     responses: {
-      200: {
-        description: 'success',
-        content: {
-          'application/json': {
-            schema: {
-              type: 'object',
-              example: user[17],
+        200: {
+            description: 'success',
+            content: {
+                'application/json': {
+                    schema: {
+                        type: 'object',
+                        example: user[17],
+                    },
+                },
             },
-          },
         },
-      },
-      401: {
-        description: 'Invalid token,try login again',
-        content: {
-          'application/json': {
-            schema: {
-              type: 'object',
-              example: user[16],
+        401: {
+            description: 'Invalid token,try login again',
+            content: {
+                'application/json': {
+                    schema: {
+                        type: 'object',
+                        example: user[16],
+                    },
+                },
             },
-          },
         },
-      },
     },
-    securitySchemes: { // define the bearerAuth security scheme
+    securitySchemes: {
+        // define the bearerAuth security scheme
         bearerAuth: {
-          type: 'http',
-          scheme: 'bearer',
-          bearerFormat: 'JWT',
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
         },
-      },
-  };
+    },
+};
 const signInUser = {
     tags: ['Authentication'],
     description:
@@ -500,9 +501,9 @@ const authRouteDoc = {
     },
     '/api/v1/auth/refreshToken': {
         post: {
-          ...refreshToken,
+            ...refreshToken,
         },
-      },
+    },
 };
 
 export default authRouteDoc;

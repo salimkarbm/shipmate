@@ -7,7 +7,7 @@ import path from 'path';
 
 dotenv.config({ path: '.env' });
 
-const { POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD,DBURL } = process.env;
+const { POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD, DBURL } = process.env;
 const config: { [key: string]: Knex.Config } = {
     development: {
         client: 'postgresql',

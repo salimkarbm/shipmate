@@ -11,6 +11,7 @@ export interface UserType {
     is_verified?: boolean;
     created_at?: string;
     user_type: string;
+    role?: string;
     is_active?: boolean;
     long_lat?: number;
 }
