@@ -45,25 +45,25 @@ export const googleAuth = async (
     }
 };
 
-//   export const facebookAuth = async (
-//     req: Request,
-//     res: Response,
-//     next: NextFunction
-//   ) => {
-//     try {
-//       const user: any = await authService.facebookAuth(req, next);
-//       if (user) {
-//         return res.status(201).json({
-//           status: 'success',
-//           message: 'User successfully login.',
-//         });
-//       }
-//     } catch (err) {
-//       return next(
-//         new AppError(`something went wrong here is the error ${err}`, 500)
-//       );
-//     }
-//   };
+export const facebookAuth = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const user: any = await authService.facebookAuth(req, next);
+        if (user) {
+            return res.status(201).json({
+                status: 'success',
+                message: 'User successfully login.',
+            });
+        }
+    } catch (err) {
+        return next(
+            new AppError(`something went wrong here is the error ${err}`, 500)
+        );
+    }
+};
 
 export const create = async (
     req: Request,

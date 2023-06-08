@@ -96,6 +96,11 @@ const user = [
         success: true,
         message: 'refresh token verification successful',
     },
+    {
+        status: 'success',
+        message: 'Google Authentication URL Sent',
+        url: 'https://accounts.google.com/o/oauth2/v2/auth?redirect_uri=http%3A%2F%2Flocalhost%3A8000&client_id=234296235641-ib2ph9m5o1c9ncgef8uusbs6emcdsght.apps.googleusercontent.com&access_type=offline&response_type=code&prompt=consent&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email',
+    },
 ];
 
 const createUser = {
@@ -217,6 +222,53 @@ const verifyAccount = {
                     schema: {
                         type: 'object',
                         example: user[9],
+                    },
+                },
+            },
+        },
+    },
+};
+
+const facebookSignIn = {
+    tags: ['Authentication'],
+    description:
+        'A user can sign in with facebook, on successful signin you will get a token in your browser cookies',
+    requestBody: {
+        content: {
+            'application/json': {
+                schema: {
+                    type: 'object',
+                    properties: {
+                        token: {
+                            type: 'string',
+                            description: 'token obtain from facebook',
+                            example:
+                                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoidW5kZWZpbmVkIHVuZGVmaW5lZCIsImlhd',
+                        },
+                    },
+                },
+            },
+        },
+    },
+    responses: {
+        200: {
+            description: 'Ok',
+            content: {
+                'application/json': {
+                    schema: {
+                        type: 'object',
+                        example: user[22],
+                    },
+                },
+            },
+        },
+        401: {
+            description: 'Unauthorized',
+            content: {
+                'application/json': {
+                    schema: {
+                        type: 'object',
+                        example: user[15],
                     },
                 },
             },
@@ -400,6 +452,24 @@ const forgotPassword = {
         },
     },
 };
+
+const googleLoginURl = {
+    tags: ['Authentication'],
+    description: 'Google Login redirect url',
+    responses: {
+        200: {
+            description: 'Ok',
+            content: {
+                'application/json': {
+                    schema: {
+                        type: 'object',
+                        example: user[18],
+                    },
+                },
+            },
+        },
+    },
+};
 const resetPassword = {
     tags: ['Authentication'],
     description: 'Reset existing user password',
@@ -502,6 +572,16 @@ const authRouteDoc = {
     '/api/v1/auth/refreshToken': {
         post: {
             ...refreshToken,
+        },
+    },
+    '/api/v1/auth/facebook': {
+        post: {
+            ...facebookSignIn,
+        },
+    },
+    '/api/v1/auth/google-login-url': {
+        get: {
+            ...googleLoginURl,
         },
     },
 };

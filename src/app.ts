@@ -1,5 +1,6 @@
 // import dotenv
 import dotenv from 'dotenv';
+import cors from 'cors';
 
 // import express
 import express, { Application, Request, Response, NextFunction } from 'express';
@@ -20,6 +21,8 @@ setupDb();
 const PORT: number = Number(process.env.PORT) || 3000;
 const address = `0.0.0.0:${PORT}`;
 
+
+app.use(cors());
 // Body parser middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -27,7 +30,7 @@ app.use(express.urlencoded({ extended: false }));
 // Define index route
 app.get('/', async (req: Request, res: Response) => {
     res.contentType('json');
-    res.json({ status: 'ok', message: 'Welcome to DeliveryCog' });
+    res.json({ status: 'ok', message: 'Welcome to ShipMate' });
 });
 
 // Routes

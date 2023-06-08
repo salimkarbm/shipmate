@@ -8,6 +8,8 @@ import util from '../../Utilities/utils';
 import Email from '../Email/mailer';
 import AuthRepository from '../../Repository/auth/auth.repository';
 import UserRepository from '../../Repository/User/userRepository';
+import axios from 'axios';
+import { utils } from '../../Utilities/utils';
 
 const userRepository = new UserRepository();
 const authRepository = new AuthRepository();
@@ -26,7 +28,6 @@ export default class AuthService {
         }
         return url;
     };
-
     public async googleAuth(req: Request, next: NextFunction) {
         const { name, email, picture, contact } = await util.getTokens(
             req,
@@ -36,10 +37,14 @@ export default class AuthService {
         if (userExist) {
             const { accessToken, refreshToken } =
                 await util.generateAccessToken(userExist.email);
+            await mail.sendWelcome({
+                firstName: userExist.first_name,
+                email: userExist.email,
+                subject: 'Welcome to ShipMate',
+            });
             return { accessToken, refreshToken, userExist };
         } else {
             const newName = name.split(' ');
-
             const data: UserType = {
                 first_name: newName[0],
                 last_name: newName[1],
@@ -55,50 +60,61 @@ export default class AuthService {
             await mail.sendWelcome({
                 firstName: data.first_name,
                 email: data.email,
-                subject: 'Welcome to Shipmate',
+                subject: 'Welcome to ShipMate',
             });
             return { accessToken, refreshToken, newUser };
         }
     }
 
-    // public async facebookAuth(req: Request, next: NextFunction) {
-    //   const { token } = req.body;
-    //   const { data } = await axios.get(
-    //     `https://graph.facebook.com/me?access_token=${token}&fields=name,email,id`
-    //   );
-    //   if (Object.keys(data).length === 0) {
-    //     return next(new AppError('Invalid credentials, please try again.', 401));
-    //   }
-    //   const name = data.name.split(' ');
-    //   return (async () => {
-    //     let newUser;
-    //     const password = 'xxxxxxxxxx';
-    //     const hashPassword = await util.generateHash(password);
-    //     const user: any = {
-    //       first_name: name[0],
-    //       last_name: name[1],
-    //       email: data.email,
-    //       password_digest: hashPassword,
-    //       facebook_id: data.id,
-    //     };
+    public async facebookAuth(req: Request, next: NextFunction) {
+        const { token } = req.body;
+        const { data } = await axios.get(
+            `https://graph.facebook.com/me?access_token=${token}&fields=name,email,id`
+        );
+        if (Object.keys(data).length === 0) {
+            return next(
+                new AppError('Invalid credentials, please try again.', 401)
+            );
+        }
 
-    //     const userExist = await userRepository.findUserByEmail(user.email);
-    //     if (!userExist) {
-    //       newUser = await authRepository.createFacebookUser(user);
-    //       await authRepository.updateUserIsVerifiedColumn(user.email);
-    //       const { accessToken, refreshToken } = await util.generateToken(
-    //         newUser.email
-    //       );
-    //       return { accessToken, refreshToken, newUser };
-    //     } else if (userExist) {
-    //       newUser = await userRepository.findUserByEmail(userExist[0].email);
-    //       const { accessToken, refreshToken } = await util.generateToken(
-    //         userExist[0].email
-    //       );
-    //       return { accessToken, refreshToken, newUser };
-    //     }
-    //   })();
-    //}
+        const name = data.name.split(' ');
+        return (async () => {
+            let newUser;
+            const password = '';
+            const hashPassword = await new utils().bcrypt(password);
+            const user: any = {
+                first_name: name[0],
+                last_name: name[1],
+                email: data.email,
+                password_digest: hashPassword,
+                phone_number: 123456789,
+                user_type: 'User',
+            };
+
+            const userExist = await userRepository.findUserByEmail(user.email);
+            if (!userExist) {
+                newUser = await authRepository.createUser(user);
+                const { accessToken, refreshToken } =
+                    await util.generateAccessToken(newUser.email);
+                await mail.sendWelcome({
+                    firstName: newUser.first_name,
+                    email: newUser.email,
+                    subject: 'Welcome to ShipMate',
+                });
+                return { accessToken, refreshToken, newUser };
+            } else if (userExist) {
+                newUser = await userRepository.findUserByEmail(userExist.email);
+                const { accessToken, refreshToken } =
+                    await util.generateAccessToken(userExist.email);
+                await mail.sendWelcome({
+                    firstName: userExist.first_name,
+                    email: userExist.email,
+                    subject: 'Welcome to ShipMate',
+                });
+                return { accessToken, refreshToken, newUser };
+            }
+        })();
+    }
 
     public async registerUser(
         req: Request,
@@ -141,7 +157,7 @@ export default class AuthService {
                 const userInfo = {
                     firstName: registerUser.first_name,
                     email: registerUser.email,
-                    subject: 'Verify your Shipmate Account',
+                    subject: 'Verify your ShipMate Account',
                     code: Number(registerUser.verification_code),
                 };
                 await mail.sendOTP(userInfo);
@@ -216,7 +232,7 @@ export default class AuthService {
             const userInfo = {
                 firstName: user.first_name,
                 email: user.email,
-                subject: 'Welcome to Shipmate',
+                subject: 'Welcome to ShipMate',
             };
             return await mail.sendWelcome(userInfo);
         }
@@ -244,7 +260,7 @@ export default class AuthService {
             email,
             firstName: user[0].first_name,
             code: user[0].verification_code,
-            subject: 'Shipmate Password Reset Sent',
+            subject: 'ShipMate Password Reset Sent',
         };
 
         return await mail.sendForgotPassword(data);
