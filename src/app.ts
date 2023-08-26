@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 // import express
 import express, { Application, Request, Response, NextFunction } from 'express';
 
-import AppError from './Utilities/Errors/appError';
+import AppError from './Utils/Errors/appError';
 import { errorHandler } from './Middlewares/Errors/errorMiddleware';
 import  logger from  "./Logger/index"
 

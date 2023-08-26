@@ -13,6 +13,12 @@
         "jasmine": "jasmine",
         "start:dev": "npm run tsc && nodemon  ./src/app.ts",
         "start:prod": "npm run tsc && NODE_ENV=production nodemon ./src/app.js",
+        "migrate:dev:up": "npx knex migrate:latest --knexfile ./src/Database/knexfile.ts --env development ",
+        "migrate:dev:down": "npx knex migrate:down  --knexfile ./src/Database/knexfile.ts --env development ",
+        "migrate:dev:add": "npx knex migrate:make --knexfile ./src/Database/knexfile.ts --env development ",
+        "migrate:dev:rollback": "npx knex migrate:rollback --knexfile ./src/Database/knexfile.ts --env development ",
+        "migrate:prod:up": "npx knex migrate:latest --knexfile ./src/Database/knexfile.ts --env production ",
+        "migrate:prod:down": "npx knex migrate:down  --knexfile ./src/Database/knexfile.ts --env production ",
         "tsc": "tsc"
     },
     "repository": {
@@ -26,9 +32,13 @@
     },
     "homepage": "https://github.com/salimkarbm/starter#readme",
     "dependencies": {
+        "app-root-path": "^3.1.0",
         "cors": "^2.8.5",
         "dotenv": "^16.1.4",
         "express": "^4.18.2",
+        "knex": "^2.5.1",
+        "objection": "^3.1.1",
+        "pg": "^8.11.3",
         "winston": "^3.10.0"
     },
     "devDependencies": {
