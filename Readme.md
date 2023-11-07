@@ -1,5 +1,5 @@
 # Shipmate
-Fantom is an online shopping store Api that display products available for purchase.
+Shipmate is an interstate delivery platform,this platform allows people to send items to other geographical states through individuals traveling to those destinations.
 
 # API Functionality
 An Express based RESTful API design was used to access a Postgres database for data storage and retrieval.
