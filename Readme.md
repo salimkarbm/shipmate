@@ -1,14 +1,14 @@
 # Shipmate
 Shipmate is an interstate delivery platform,this platform allows people to send items to other geographical states through individuals traveling to those destinations.
 
-# API Functionality
+### API Functionality
 An Express based RESTful API design was used to access a Postgres database for data storage and retrieval.
 Using JWT tokens to provide stateless authenticated access for retreiving and storing data in persistent storage.
 
 This API provides the following Endpoints check the documentation [here]():
 
 
-# Technologies used
+### Technologies used
 
 This project is Bootstrapped with with the following stack:
 
@@ -26,7 +26,7 @@ All of the dependencies required are listed in the package.json file. Use `npm i
 > However, you will need to install node and postgreSQL globally on your local machine
 
 
-# Installation and Environment Setup
+### Installation and Environment Setup
 
 The following steps outline will set you up on how to install the app on your local machine.
 
@@ -47,7 +47,7 @@ cd shipmate
 5. Once these are set, start an instance of Postgres ensure Postgres is started on port **5432**.
 
 
-# Setup the required databases
+### Setup the required databases
 
 In order to use the API locally you must pre-configure the initial database. To do so access the psql prompt as postgres on the installed Postgres database and enter the following commands at the prompt:
 
@@ -57,7 +57,7 @@ CREATE DATABASE testdb_shipmate;
 
 ```
 
-# Running the Jest Test
+### Running the Jest Test
 
 To run the jest test use the following commands:
 
@@ -78,19 +78,19 @@ run the following command to drop the test database
 npm run drop-testdb
 ```
 
-# Usage
+### Usage
 
 The endpoints available for interacting with the API can be found in the Documentation [here]()
 
-# :handshake: Contributing
+### :handshake: Contributing
 Contributions are currently not allowed ❌ but please feel free to submit issues and feature requests ✅
 
-# Authors
+### Authors
 
 Github:[@salimkarbm](https://github.com/salimkarbm)\
 LinkedIn:[Salim Imuzai](https://www.linkedin.com/in/salimkarbm/)\
 Twitter:[@salimkarbm](https://twitter.com/salimkarbm)
 
-# Show your support
+### Show your support
 
    - Give a :star: if you like this project
