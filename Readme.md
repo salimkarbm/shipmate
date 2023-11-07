@@ -10,7 +10,7 @@ This API provides the following Endpoints check the documentation [here]():
 
 # Technologies used
 
-This project was Bootstrapped with with the following stack:
+This project is Bootstrapped with with the following stack:
 
 1. [Node](https://nodejs.org/en/) (Javacript runtime).
 2. [Express](https://expressjs.com/) (For creating endpoints, routing, and serving files).
