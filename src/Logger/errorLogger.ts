@@ -1,5 +1,3 @@
-
-
 import { Logger, createLogger, format, transports } from 'winston';
 const { combine, timestamp, printf, colorize } = format;
 
@@ -14,12 +12,10 @@ interface ErrorLogFunction {
 export const devErrorLog: ErrorLogFunction = () => {
   return createLogger({
     level: 'debug',
-    format: combine(colorize(), timestamp({ format: "HH:mm:ss" }), myFormat),
-    transports: [
-      new transports.Console()
-    ],
+    format: combine(colorize(), timestamp({ format: 'HH:mm:ss' }), myFormat),
+    transports: [new transports.Console()]
   });
-}
+};
 
 export const prodErrorLog: ErrorLogFunction = () => {
   return createLogger({
@@ -28,8 +24,6 @@ export const prodErrorLog: ErrorLogFunction = () => {
     transports: [
       new transports.Console(),
       new transports.File({ filename: 'error.log', level: 'error' })
-    ],
+    ]
   });
-}
-
-
+};
