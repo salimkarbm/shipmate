@@ -78,3 +78,25 @@ export const login = async (
         );
     }
 };
+
+export const resendOTP = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        await authService.resendOTP(req, next);
+        return res.status(statusCode.ok()).json({
+            success: true,
+            message: 'OTP sent successful, please check your email'
+        });
+    } catch (err) {
+        logger.error(err);
+        return next(
+            new AppError(
+                `something went wrong here is the error ${err}`,
+                statusCode.internalServerError()
+            )
+        );
+    }
+};

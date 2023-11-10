@@ -164,4 +164,31 @@ export default class AuthService {
             }
         }
     }
+
+    public async resendOTP(
+        req: Request,
+        next: NextFunction
+    ): Promise<IUser | void> {
+        const { email } = req.body;
+        const user = await userRepository.findUserByEmail(email);
+        if (!user) {
+            return next(new AppError('User not found', statusCode.notFound()));
+        }
+        const { OTP, otpExpiresAt } = await utils.generateOtpCode();
+        const payload = {
+            email,
+            OTP,
+            otpExpiresAt
+        };
+
+        const emailData = await emailNotification.sendOTP({
+            email,
+            subject: 'OTP Verification Code',
+            OTP
+        });
+        if (emailData.accepted[0] === user.email) {
+            const response = await authRepository.UpdateOTP(payload);
+            return response as IUser;
+        }
+    }
 }

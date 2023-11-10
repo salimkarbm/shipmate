@@ -9,6 +9,7 @@ import {
 import {
     activateUserAccount,
     login,
+    resendOTP,
     signUp
 } from '../../Controllers/Auth/auth.controllers';
 
@@ -16,6 +17,7 @@ const router = Router();
 
 router.post('/signup', signUpValidationRules(), validate, signUp);
 router.post('/login', loginValidationRules(), validate, login);
+router.post('/resendOTP', OTPEmailValidationRules(), validate, resendOTP);
 router.post(
     '/activateAccount',
     OTPEmailValidationRules(),

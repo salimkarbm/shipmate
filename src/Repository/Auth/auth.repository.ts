@@ -17,4 +17,17 @@ export default class AuthRepository {
         const user: IUser | null = await userRepository.findUserById(userId);
         return updatedPerson ? (user as IUser) : null;
     }
+
+    async UpdateOTP(payload: any): Promise<IUser | null> {
+        const updatedPerson: any = await TABLE.USERS.query()
+            .patch({
+                OTP: payload.OTP,
+                otpExpiresAt: payload.otpExpiresAt
+            })
+            .where({ email: payload.email });
+        const user: IUser | null = await userRepository.findUserByEmail(
+            payload.email
+        );
+        return updatedPerson ? (user as IUser) : null;
+    }
 }
