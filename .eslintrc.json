@@ -2,7 +2,7 @@
     "env": {
         "browser": true,
         "es2021": true,
-        "jasmine": true
+        "jest": true
     },
     "extends": [
         "eslint-config-airbnb-base",
@@ -17,6 +17,7 @@
     },
     "plugins": ["@typescript-eslint", "prettier"],
     "rules": {
+      "prettier/prettier": "error",
         "consistent-return": "off",
         "no-param-reassign": "off",
         "func-names": "off",
