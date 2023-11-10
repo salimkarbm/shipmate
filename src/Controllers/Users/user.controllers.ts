@@ -3,7 +3,7 @@ import { IUser } from '../../Models/Users/user.models';
 import AppError from '../../Utils/Errors/appError';
 import { userService } from '../../Services/index';
 import { statusCode } from '../../Utils/helpers';
-import logger from '../../Logger';
+import logger from '../../Utils/Logger';
 
 export const findUsers = async (
     req: Request,

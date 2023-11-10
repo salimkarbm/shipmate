@@ -7,7 +7,7 @@ import express, { Application, Request, Response, NextFunction } from 'express';
 
 import AppError from './Utils/Errors/appError';
 import { errorHandler } from './Middlewares/Errors/errorMiddleware';
-import logger from './Logger/index';
+import logger from './Utils/Logger/index';
 import routes from './Routes/index';
 import DBsetUp from './Database/db.config';
 

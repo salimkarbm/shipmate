@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import nodemailer from 'nodemailer';
-import Utility from '../../Utils/helpers';
+import Utility from '../helpers';
 
 dotenv.config({ path: '.env' });
 
@@ -27,6 +27,7 @@ export class MalierService {
     private MAIL_PORT = process.env.MAIL_PORT;
 
     async sendMail(options: Mail, template: string): Promise<any> {
+        // convert email in HTML to plain text
         const text = await util.convertEmailToText(template);
         const msg: any = {
             to: options.email,
@@ -36,6 +37,7 @@ export class MalierService {
             html: template
         };
         if (process.env.NODE_ENV === 'production') {
+            // Config nodemailer
             const transporter = nodemailer.createTransport({
                 service: this.SERVICE_NAME,
                 host: this.MAIL_HOST,
@@ -64,6 +66,7 @@ export class MalierService {
         return result;
     }
 
+    // send the OTP email
     async sendOTP(options: Mail) {
         if (options.OTP !== undefined && options.OTP.toString().length === 6) {
             const message = `
@@ -87,6 +90,7 @@ export class MalierService {
         }
     }
 
+    // Email Activation Email
     async accountActivationMail(options: Mail) {
         const message = `
         <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);">
@@ -103,6 +107,7 @@ export class MalierService {
         return result;
     }
 
+    // Admin invite Notification
     async createAdminMail(options: Mail, adminPassword: string) {
         const message = `<p>Welcome to BCA-HEALTHCARE.</p>
         <p>You've been invited to join the BCA-HEALTHCARE platform in an administrative capacity.
@@ -116,6 +121,7 @@ export class MalierService {
         return result;
     }
 
+    // Forget password Notification Email
     async forgotPasswordMail(options: Mail) {
         if (options.OTP !== undefined && options.OTP.toString().length === 6) {
             const message = `<p>Hi, <br> 
@@ -131,6 +137,7 @@ export class MalierService {
         }
     }
 
+    // Reset Password Notification Email
     async resetPasswordMail(options: Mail) {
         const message = `<p>
     Hi, <br> 

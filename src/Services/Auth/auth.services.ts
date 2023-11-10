@@ -3,10 +3,10 @@ import { IUser } from '../../Models/Users/user.models';
 import AppError from '../../Utils/Errors/appError';
 import Utilities, { statusCode } from '../../Utils/helpers';
 import { authRepository, userRepository } from '../../Repository/index';
-import { MalierService } from '../Email/mailer';
+import { MalierService } from '../../Utils/Email/mailer';
 
 const utils = new Utilities();
-const mail = new MalierService();
+const EmailNotification = new MalierService();
 
 export default class AuthService {
     public async signUp(
@@ -50,7 +50,7 @@ export default class AuthService {
             otpExpiresAt
         };
 
-        const emailData = await mail.sendOTP({
+        const emailData = await EmailNotification.sendOTP({
             email,
             subject: 'Shipmate Email Verification',
             OTP
@@ -104,7 +104,7 @@ export default class AuthService {
             );
         }
 
-        const emailData = await mail.accountActivationMail({
+        const emailData = await EmailNotification.accountActivationMail({
             email: user.email,
             subject: 'Shipmate Email Activation'
         });
