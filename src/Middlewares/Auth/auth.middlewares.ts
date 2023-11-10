@@ -40,7 +40,7 @@ export const loginValidationRules = () => {
             .trim()
             .notEmpty()
             .withMessage('Password Email is required')
-            .isLength({ min: 6, max: 16 })
+            .isLength({ min: 8, max: 16 })
             .withMessage(
                 'Password must be between min of 6 and max of 16 characters'
             )

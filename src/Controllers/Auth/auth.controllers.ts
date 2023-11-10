@@ -55,3 +55,26 @@ export const activateUserAccount = async (
         );
     }
 };
+
+export const login = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const response = await authService.login(req, res, next);
+        res.status(statusCode.accepted()).json({
+            success: true,
+            message: 'Login successful',
+            response
+        });
+    } catch (err) {
+        logger.error(err);
+        return next(
+            new AppError(
+                `something went wrong here is the error ${err}`,
+                statusCode.internalServerError()
+            )
+        );
+    }
+};

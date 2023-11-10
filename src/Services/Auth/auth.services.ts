@@ -1,4 +1,4 @@
-import { Request, NextFunction } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { IUser } from '../../Models/Users/user.models';
 import AppError from '../../Utils/Errors/appError';
 import Utilities, { statusCode } from '../../Utils/helpers';
@@ -6,7 +6,7 @@ import { authRepository, userRepository } from '../../Repository/index';
 import { MalierService } from '../../Utils/Email/mailer';
 
 const utils = new Utilities();
-const EmailNotification = new MalierService();
+const emailNotification = new MalierService();
 
 export default class AuthService {
     public async signUp(
@@ -50,7 +50,7 @@ export default class AuthService {
             otpExpiresAt
         };
 
-        const emailData = await EmailNotification.sendOTP({
+        const emailData = await emailNotification.sendOTP({
             email,
             subject: 'Shipmate Email Verification',
             OTP
@@ -77,7 +77,7 @@ export default class AuthService {
             user?.otpExpiresAt !== undefined &&
             Date.now() > user?.otpExpiresAt
         ) {
-            return next(
+            throw next(
                 new AppError(
                     'Invalid OTP or OTP has expired',
                     statusCode.badRequest()
@@ -85,7 +85,7 @@ export default class AuthService {
             );
         }
         if (user === null) {
-            return next(
+            throw next(
                 new AppError(
                     'Resource for user not found',
                     statusCode.notFound()
@@ -93,10 +93,10 @@ export default class AuthService {
             );
         }
         if (user.OTP !== Number(OTP)) {
-            return next(new AppError('Invalid OTP', statusCode.unauthorized()));
+            throw next(new AppError('Invalid OTP', statusCode.unauthorized()));
         }
         if (user.isEmailVerified) {
-            return next(
+            throw next(
                 new AppError(
                     'Email already verified',
                     statusCode.unauthorized()
@@ -104,7 +104,7 @@ export default class AuthService {
             );
         }
 
-        const emailData = await EmailNotification.accountActivationMail({
+        const emailData = await emailNotification.accountActivationMail({
             email: user.email,
             subject: 'Shipmate Email Activation'
         });
@@ -115,5 +115,53 @@ export default class AuthService {
         throw next(
             new AppError('Email not sent', statusCode.serviceUnavalaibleError())
         );
+    }
+
+    public async login(req: Request, res: Response, next: NextFunction) {
+        const { email, password } = req.body;
+        const user = await userRepository.findUserByEmail(email);
+        if (!user) {
+            throw next(
+                new AppError(
+                    'Incorrect Email or password',
+                    statusCode.notFound()
+                )
+            );
+        }
+        if (!user.isEmailVerified) {
+            throw next(
+                new AppError(
+                    'User account is not active, Kindly activate account',
+                    statusCode.unprocessableEntity()
+                )
+            );
+        }
+        if (user) {
+            const checkPassword = await utils.comparePassword(
+                password,
+                user.passwordDigest
+            );
+            if (checkPassword) {
+                /*
+                  send a mail to the user email on successful login attempt
+                */
+                const { accessToken, refreshToken } = await utils.generateToken(
+                    user.email
+                );
+                if (accessToken && refreshToken) {
+                    res.cookie('jwt', refreshToken, {
+                        maxAge: 24 * 60 * 60 * 1000,
+                        httpOnly: true
+                    });
+                }
+                return {
+                    accessToken,
+                    refreshToken,
+                    data: {
+                        user
+                    }
+                };
+            }
+        }
     }
 }

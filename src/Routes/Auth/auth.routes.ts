@@ -3,16 +3,19 @@ import { Router } from 'express';
 import validate from '../../Middlewares/reqValidation.middleware';
 import {
     OTPEmailValidationRules,
+    loginValidationRules,
     signUpValidationRules
 } from '../../Middlewares/Auth/auth.middlewares';
 import {
     activateUserAccount,
+    login,
     signUp
 } from '../../Controllers/Auth/auth.controllers';
 
 const router = Router();
 
 router.post('/signup', signUpValidationRules(), validate, signUp);
+router.post('/login', loginValidationRules(), validate, login);
 router.post(
     '/activateAccount',
     OTPEmailValidationRules(),
