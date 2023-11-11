@@ -8,6 +8,7 @@ import multer from 'multer';
 import { v4 as uuidv4 } from 'uuid';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import UserRepository from '../Repository/Users/user.repository';
+import logger from './Logger/index';
 
 const userRepository = new UserRepository();
 
@@ -49,6 +50,7 @@ export default class Utilities {
                 expired: false
             };
         } catch (error) {
+            logger.error(error);
             if ((error as Error).name === 'TokenExpiredError') {
                 return { payload: jwt.decode(token), expired: true };
             }
@@ -132,6 +134,7 @@ export default class Utilities {
     async verifyToken(email: string, token: string) {
         try {
             const decoded: JwtPayload = jwt.decode(token) as JwtPayload;
+            console.log(decoded);
             const expirationTime = decoded.exp as number;
             const currentTime = Math.floor(Date.now() / 1000);
             if (currentTime > expirationTime || decoded.email !== email) {
@@ -141,6 +144,7 @@ export default class Utilities {
             // token is still valid
             return true;
         } catch (error) {
+            logger.error(error);
             return false;
         }
     }

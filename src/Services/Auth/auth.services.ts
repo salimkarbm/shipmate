@@ -154,6 +154,9 @@ export default class AuthService {
                         httpOnly: true
                     });
                 }
+                user.passwordResetOtp = 'undefine';
+                user.passwordDigest = 'undefine';
+                user.OTP = 'undefine';
                 return {
                     accessToken,
                     refreshToken,
@@ -190,5 +193,38 @@ export default class AuthService {
             const response = await authRepository.UpdateOTP(payload);
             return response as IUser;
         }
+    }
+
+    public async refreshToken(req: Request, res: Response, next: NextFunction) {
+        const email = req.headers['x-user-email'] as string;
+        const token = req.headers['x-user-token'] as string;
+        const user = await userRepository.findUserByEmail(email);
+        if (!user) {
+            return next(
+                new AppError(
+                    'User with this email not found',
+                    statusCode.notFound()
+                )
+            );
+        }
+        const isValid = await utils.verifyToken(email, token);
+        if (isValid) {
+            const { accessToken, refreshToken } =
+                await utils.generateToken(email);
+            user.OTP = 'undefined';
+            user.passwordDigest = 'undefined';
+            user.passwordResetOtp = 'undefine';
+            return res.status(200).json({
+                accessToken,
+                refreshToken,
+                data: user
+            });
+        }
+        return next(
+            new AppError(
+                'Invalid token. Please login to gain access',
+                statusCode.unauthorized()
+            )
+        );
     }
 }

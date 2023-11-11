@@ -1,4 +1,4 @@
-import { body } from 'express-validator';
+import { body, check } from 'express-validator';
 
 export const signUpValidationRules = () => {
     return [
@@ -61,5 +61,16 @@ export const OTPEmailValidationRules = () => {
             .trim()
             .isEmail()
             .withMessage('Email is required')
+    ];
+};
+
+export const refreshTokenValidationRules = () => {
+    return [
+        check('x-user-email')
+            .notEmpty()
+            .withMessage('Email header is required'),
+        check('x-user-token')
+            .notEmpty()
+            .withMessage('Refresh Token header is required')
     ];
 };

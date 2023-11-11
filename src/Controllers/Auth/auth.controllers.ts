@@ -100,3 +100,22 @@ export const resendOTP = async (
         );
     }
 };
+
+export const refreshToken = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const verifiedToken = await authService.refreshToken(req, res, next);
+        return verifiedToken;
+    } catch (err) {
+        logger.error(err);
+        return next(
+            new AppError(
+                `something went wrong here is the error ${err}`,
+                statusCode.internalServerError()
+            )
+        );
+    }
+};
