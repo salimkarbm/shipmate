@@ -9,6 +9,7 @@ import {
 } from '../../Middlewares/Auth/auth.middlewares';
 import {
     activateUserAccount,
+    forgotPassword,
     login,
     refreshToken,
     resendOTP,
@@ -20,6 +21,12 @@ const router = Router();
 router.post('/signup', signUpValidationRules(), validate, signUp);
 router.post('/login', loginValidationRules(), validate, login);
 router.post('/resendOTP', OTPEmailValidationRules(), validate, resendOTP);
+router.post(
+    '/forgotPassword',
+    OTPEmailValidationRules(),
+    validate,
+    forgotPassword
+);
 router.get(
     '/refreshToken',
     refreshTokenValidationRules(),

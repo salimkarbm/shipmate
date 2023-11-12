@@ -227,4 +227,35 @@ export default class AuthService {
             )
         );
     }
+
+    public async forgotPassword(req: Request, next: NextFunction) {
+        const { email } = req.body;
+        const user = await userRepository.findUserByEmail(email);
+        if (!user) {
+            return next(new AppError('User not found', statusCode.notFound()));
+        }
+        const { OTP, otpExpiresAt } = await utils.generateOtpCode();
+
+        // send mail
+        const emailData = await emailNotification.forgotPasswordMail({
+            email: user.email,
+            OTP,
+            firstName: user.firstName,
+            subject: 'Forgot Password Notification'
+        });
+        if (emailData.accepted[0] === user.email) {
+            await authRepository.UpdateOTP({
+                email,
+                OTP,
+                otpExpiresAt
+            });
+            return user;
+        }
+        throw next(
+            new AppError(
+                'Notification failed, try again later',
+                statusCode.noContent()
+            )
+        );
+    }
 }

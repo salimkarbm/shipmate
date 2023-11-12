@@ -124,14 +124,19 @@ export class MalierService {
     // Forget password Notification Email
     async forgotPasswordMail(options: Mail) {
         if (options.OTP !== undefined && options.OTP.toString().length === 6) {
-            const message = `<p>Hi, <br> 
+            const message = `
+            <div style=" font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);">
+
+            <h2 style="text-align: center; color: #007bff;">${options.subject}</h2>
+            <p>Hi ${options.firstName}, <br> 
         <p>We received a request to reset your password, to reset your password use the code below and follow the instructions.<br> 
-        <b>Code: ${options.OTP}</b><br>
+        <p>Code: ${options.OTP}</p><br>
 
        <p>If you didn't request this, please ignore this email.
         </p>
-        Thanks,  <br> 
-        Team BCA-HEALTHCARE <p/>`;
+        Best regards,  <br> 
+        Team Shipmate <p/>
+        </div>`;
             const result = await this.sendMail(options, message);
             return result;
         }

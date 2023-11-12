@@ -119,3 +119,28 @@ export const refreshToken = async (
         );
     }
 };
+
+export const forgotPassword = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const user = await authService.forgotPassword(req, next);
+        if (user) {
+            return res.status(statusCode.accepted()).json({
+                success: true,
+                message:
+                    'A passowrd reset code has been sent to your email Successfully.'
+            });
+        }
+    } catch (err) {
+        logger.error(err);
+        return next(
+            new AppError(
+                `something went wrong here is the error ${err}`,
+                statusCode.internalServerError()
+            )
+        );
+    }
+};

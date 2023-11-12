@@ -24,7 +24,6 @@ export async function up(knex: Knex): Promise<void> {
         table.string('role', 20).notNullable().defaultTo('user');
         table.boolean('isActive').notNullable().defaultTo(true);
         table.bigInteger('otpExpiresAt');
-        table.string('passwordResetOtp');
         table.timestamps(true, true);
     });
 }

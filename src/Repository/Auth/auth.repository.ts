@@ -1,4 +1,4 @@
-import { IUser } from '../../Models/Users/user.models';
+import { IUser, IUpdateOTP } from '../../Models/Users/user.models';
 import TABLE from '../../Models/index';
 import { userRepository } from '../index';
 
@@ -18,7 +18,7 @@ export default class AuthRepository {
         return updatedPerson ? (user as IUser) : null;
     }
 
-    async UpdateOTP(payload: any): Promise<IUser | null> {
+    async UpdateOTP(payload: IUpdateOTP): Promise<IUser | null> {
         const updatedPerson: any = await TABLE.USERS.query()
             .patch({
                 OTP: payload.OTP,
