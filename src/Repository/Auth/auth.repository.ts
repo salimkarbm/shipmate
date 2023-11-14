@@ -1,6 +1,9 @@
 import { IUser, IUpdateOTP } from '../../Models/Users/user.models';
 import TABLE from '../../Models/index';
 import { userRepository } from '../index';
+import Utilities from '../../Utils/helpers';
+
+const utils = new Utilities();
 
 export default class AuthRepository {
     async signUp(payload: IUser): Promise<IUser> {
@@ -28,6 +31,21 @@ export default class AuthRepository {
         const user: IUser | null = await userRepository.findUserByEmail(
             payload.email
         );
+        return updatedPerson ? (user as IUser) : null;
+    }
+
+    async resetPassword(
+        email: string,
+        newPassword: string
+    ): Promise<IUser | null> {
+        const hashPassword = await utils.generateHash(newPassword);
+        const updatedPerson: any = await TABLE.USERS.query()
+            .patch({
+                passwordDigest: hashPassword
+            })
+            .where({ email });
+
+        const user: IUser | null = await userRepository.findUserByEmail(email);
         return updatedPerson ? (user as IUser) : null;
     }
 }

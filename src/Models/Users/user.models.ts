@@ -23,13 +23,13 @@ export interface IUser {
     readonly length?: number;
     location?: string;
     userType?: string;
+    facebookId?: string;
 }
 
 export interface IUpdateOTP {
     OTP: number | number;
     otpExpiresAt: number | string;
     email: string;
-    passwordResetOTP?: number | string;
 }
 
 export class User extends Model {

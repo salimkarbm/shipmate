@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+import axios from 'axios';
 import { IUser } from '../../Models/Users/user.models';
 import AppError from '../../Utils/Errors/appError';
 import Utilities, { statusCode } from '../../Utils/helpers';
@@ -175,7 +176,7 @@ export default class AuthService {
         const { email } = req.body;
         const user = await userRepository.findUserByEmail(email);
         if (!user) {
-            return next(new AppError('User not found', statusCode.notFound()));
+            throw next(new AppError('User not found', statusCode.notFound()));
         }
         const { OTP, otpExpiresAt } = await utils.generateOtpCode();
         const payload = {
@@ -200,7 +201,7 @@ export default class AuthService {
         const token = req.headers['x-user-token'] as string;
         const user = await userRepository.findUserByEmail(email);
         if (!user) {
-            return next(
+            throw next(
                 new AppError(
                     'User with this email not found',
                     statusCode.notFound()
@@ -220,7 +221,7 @@ export default class AuthService {
                 data: user
             });
         }
-        return next(
+        throw next(
             new AppError(
                 'Invalid token. Please login to gain access',
                 statusCode.unauthorized()
@@ -232,7 +233,7 @@ export default class AuthService {
         const { email } = req.body;
         const user = await userRepository.findUserByEmail(email);
         if (!user) {
-            return next(new AppError('User not found', statusCode.notFound()));
+            throw next(new AppError('User not found', statusCode.notFound()));
         }
         const { OTP, otpExpiresAt } = await utils.generateOtpCode();
 
@@ -257,5 +258,98 @@ export default class AuthService {
                 statusCode.noContent()
             )
         );
+    }
+
+    public async resetPassword(req: Request, next: NextFunction) {
+        const { newPassword, confirmNewPassword, OTP, email } = req.body;
+        const password =
+            newPassword === confirmNewPassword
+                ? newPassword
+                : next(
+                      new AppError(
+                          "password doesn't match",
+                          statusCode.badRequest()
+                      )
+                  );
+        const user = await userRepository.findUserByEmail(email);
+        if (!user) {
+            throw next(new AppError('user not found', statusCode.notFound()));
+        }
+        if (OTP !== String(user.OTP)) {
+            throw next(new AppError('Invalid OTP', statusCode.badRequest()));
+        }
+
+        if (Date.now() > Number(user.otpExpiresAt)) {
+            throw next(
+                new AppError(
+                    'Invalid OTP or OTP has expired',
+                    statusCode.badRequest()
+                )
+            );
+        }
+
+        const emailData = await emailNotification.resetPasswordMail({
+            email,
+            firstName: user.firstName,
+            subject: 'Password Reset Notification'
+        });
+
+        if (emailData.accepted[0] === user.email) {
+            const resetUser: IUser | null = await authRepository.resetPassword(
+                email,
+                password
+            );
+            return resetUser;
+        }
+        throw next(
+            new AppError(
+                'Notification failed, try again later',
+                statusCode.noContent()
+            )
+        );
+    }
+
+    public async facebookAuth(req: Request, next: NextFunction) {
+        const { token } = req.body;
+        const result = await axios.get(
+            `https://graph.facebook.com/me?access_token=${token}&fields=name,email,id`
+        );
+        if (!result.data) {
+            throw next(
+                new AppError(
+                    'Invalid credentials, please try again.',
+                    statusCode.unauthorized()
+                )
+            );
+        }
+        const name = result.data.name.split(' ');
+        return (async () => {
+            let newUser;
+            const password = 'undefine';
+            const hashPassword = await utils.generateHash(password);
+            const payload: any = {
+                firstName: name[0],
+                lastName: name[1],
+                email: result.data.email,
+                passwordDigest: hashPassword,
+                facebookId: result.data.id
+            };
+            const user = await userRepository.findUserByEmail(payload.email);
+            if (!user) {
+                newUser = await authRepository.signUp(payload);
+                // await authRepository.updateUserIsVerified(user.email);
+                const { accessToken, refreshToken } = await utils.generateToken(
+                    newUser.email
+                );
+                return { accessToken, refreshToken, newUser };
+            }
+            if (user) {
+                newUser = await userRepository.findUserByEmail(user.email);
+                const { accessToken, refreshToken } = await utils.generateToken(
+                    user.email
+                );
+                return { accessToken, refreshToken, newUser };
+            }
+        })();
     }
 }

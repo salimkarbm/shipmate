@@ -33,6 +33,7 @@
     "homepage": "https://github.com/salimkarbm/starter#readme",
     "dependencies": {
         "app-root-path": "^3.1.0",
+        "axios": "^1.6.1",
         "bcrypt": "^5.1.1",
         "cloudinary": "^1.41.0",
         "cors": "^2.8.5",

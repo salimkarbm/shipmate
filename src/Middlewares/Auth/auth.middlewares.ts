@@ -74,3 +74,29 @@ export const refreshTokenValidationRules = () => {
             .withMessage('Refresh Token header is required')
     ];
 };
+
+export const resetPasswordValidationRules = () => {
+    return [
+        body('newPassword')
+            .trim()
+            .notEmpty()
+            .withMessage('New Password is required')
+            .isLength({ min: 6, max: 16 })
+            .withMessage('New Password must be between 6 and 16 characters'),
+        body('confirmNewPassword')
+            .trim()
+            .notEmpty()
+            .withMessage('Confirm Password is required')
+            .isLength({ min: 6, max: 16 })
+            .withMessage('Password must be between 6 and 16 characters'),
+        body('email')
+            .trim()
+            .isEmail()
+            .withMessage('please enter a valid email'),
+        body('OTP')
+            .trim()
+            .isNumeric()
+            .isLength({ min: 6, max: 6 })
+            .withMessage('OTP must be at least 4 character long')
+    ];
+};

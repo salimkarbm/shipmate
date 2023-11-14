@@ -134,7 +134,6 @@ export default class Utilities {
     async verifyToken(email: string, token: string) {
         try {
             const decoded: JwtPayload = jwt.decode(token) as JwtPayload;
-            console.log(decoded);
             const expirationTime = decoded.exp as number;
             const currentTime = Math.floor(Date.now() / 1000);
             if (currentTime > expirationTime || decoded.email !== email) {

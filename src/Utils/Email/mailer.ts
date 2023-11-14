@@ -144,11 +144,16 @@ export class MalierService {
 
     // Reset Password Notification Email
     async resetPasswordMail(options: Mail) {
-        const message = `<p>
-    Hi, <br> 
-    You have successfully reset your password.
+        const message = `
+        <div style=" font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;max-width: 600px; margin: 0 auto; background-color: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);">
+
+            <h2 style="text-align: center; color: #007bff;">${options.subject}</h2>
+        <p>
+    Hi ${options.firstName}, <br> 
+    <p>You have successfully reset your password.</p>
       <br> 
-    Team BCA-HEALTHCARE <p/>`;
+    Team Shipmate <p/>
+    </div>`;
         const result = await this.sendMail(options, message);
         return result;
     }

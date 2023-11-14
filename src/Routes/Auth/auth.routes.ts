@@ -5,7 +5,8 @@ import {
     OTPEmailValidationRules,
     loginValidationRules,
     signUpValidationRules,
-    refreshTokenValidationRules
+    refreshTokenValidationRules,
+    resetPasswordValidationRules
 } from '../../Middlewares/Auth/auth.middlewares';
 import {
     activateUserAccount,
@@ -13,6 +14,7 @@ import {
     login,
     refreshToken,
     resendOTP,
+    resetPassword,
     signUp
 } from '../../Controllers/Auth/auth.controllers';
 
@@ -21,6 +23,12 @@ const router = Router();
 router.post('/signup', signUpValidationRules(), validate, signUp);
 router.post('/login', loginValidationRules(), validate, login);
 router.post('/resendOTP', OTPEmailValidationRules(), validate, resendOTP);
+router.post(
+    '/resetPassword',
+    resetPasswordValidationRules(),
+    validate,
+    resetPassword
+);
 router.post(
     '/forgotPassword',
     OTPEmailValidationRules(),

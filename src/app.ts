@@ -1,6 +1,7 @@
 import cors from 'cors';
 // import dotenv
 import dotenv from 'dotenv';
+// import path from 'path';
 
 // import express
 import express, { Application, Request, Response, NextFunction } from 'express';
@@ -36,13 +37,16 @@ app.use(
     })
 );
 
+// Load Staic Files
+// app.use(express.static(path.join(`${__dirname}/src`, '../public/')));
+
 // Body parser middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 // Define index route
 app.get('/', async (req: Request, res: Response) => {
-    // res.render('index');
+    // res.sendFile('index.html');
     res.contentType('json');
     res.json({ status: 'ok', message: 'Welcome' });
 });
