@@ -1,20 +1,28 @@
 import knex from 'knex';
+import type { Knex } from 'knex';
 import { Model } from 'objection';
-import knexfile from './knexfile';
+import config from './knexfile';
 
 const { NODE_ENV } = process.env;
-
-const Dev = () => {
-    const db = knex(knexfile.development);
+let db: any;
+const Dev = (): Promise<{ [key: string]: Knex.Config }> => {
+    db = knex(config.development);
     Model.knex(db);
+    return db as any;
 };
-const Prod = () => {
-    const db = knex(knexfile.production);
+const Prod = (): Knex<{ [key: string]: Knex.Config }> => {
+    db = knex(config.production);
     Model.knex(db);
+    return db as any;
 };
 
-const DBsetup = () => {
+const dbSetup = () => {
     return NODE_ENV === 'production' ? Prod() : Dev();
 };
 
-export default DBsetup;
+const onDatabaseConnect = async () => db.raw('SELECT 1');
+
+export default {
+    dbSetup,
+    onDatabaseConnect
+};

@@ -7,9 +7,17 @@ import { knexSnakeCaseMappers } from 'objection';
 
 dotenv.config({ path: `${appPath}/.env` });
 
-dotenv.config({ path: '.env' });
-
 const { POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD, DBURL } = process.env;
+
+export interface KnexPostgreSQLConfig {
+    client: 'postgresql';
+    connection: {
+        port: number;
+        user: string;
+        password: string;
+        database: string;
+    };
+}
 const config: { [key: string]: Knex.Config } = {
     development: {
         client: 'postgresql',
@@ -18,17 +26,17 @@ const config: { [key: string]: Knex.Config } = {
             user: `${POSTGRES_USER}`,
             password: `${POSTGRES_PASSWORD}`
         },
-
+        useNullAsDefault: true,
         pool: {
             min: 2,
             max: 10
         },
         migrations: {
             tableName: 'knex_migrations',
-            directory: `${appPath}/src/Database/migrations`
+            directory: `${appPath.path}/src/Database/migrations`
         },
         seeds: {
-            directory: `${appPath}/src/Database/seeds`
+            directory: `${appPath.path}/src/Database/seeds`
         },
         ...knexSnakeCaseMappers
     },
@@ -39,15 +47,27 @@ const config: { [key: string]: Knex.Config } = {
             min: 2,
             max: 10
         },
+        useNullAsDefault: true,
         migrations: {
             tableName: 'knex_migrations',
-            directory: `${appPath}/src/Database/migrations`
+            directory: `${appPath.path}/src/Database/migrations`
         },
         seeds: {
-            directory: `${appPath}/src/Database/seeds`
+            directory: `${appPath.path}/src/Database/seeds`
         },
         ...knexSnakeCaseMappers
     }
 };
 
 export default config;
+
+// const environment = process.env.NODE_ENV || 'development';
+// const knexConfig: Knex.Config = config[environment];
+
+// if (!knexConfig.client) {
+//   throw new Error("Knex configuration error: 'client' option is missing.");
+// }
+
+// const knexInstance = Knex(knexConfig);
+
+// export default knexInstance;

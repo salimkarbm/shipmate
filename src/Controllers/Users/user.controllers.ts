@@ -20,7 +20,7 @@ export const findUsers = async (
             }
         });
     } catch (err) {
-        logger.error(err);
+        logger.error('unable to find users', err);
         return next(
             new AppError(
                 `something went wrong here is the error ${err}`,
@@ -45,7 +45,85 @@ export const findUser = async (
             }
         });
     } catch (err) {
-        logger.error(err);
+        logger.error('unable to find user', err);
+        return next(
+            new AppError(
+                `something went wrong here is the error ${err}`,
+                statusCode.internalServerError()
+            )
+        );
+    }
+};
+
+export const changeUserEmail = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const user: IUser | void = await userService.changeUserEmail(req, next);
+        return res.status(statusCode.ok()).json({
+            status: 'success',
+            message: 'Email updated successfully',
+            data: {
+                user
+            }
+        });
+    } catch (err) {
+        logger.error('Unable to update user Email', err);
+        return next(
+            new AppError(
+                `something went wrong here is the error ${err}`,
+                statusCode.internalServerError()
+            )
+        );
+    }
+};
+
+export const changeUserPassword = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const user: IUser | void = await userService.changeUserPassword(
+            req,
+            next
+        );
+        return res.status(statusCode.ok()).json({
+            status: 'success',
+            message: 'Password changed successfully',
+            data: {
+                user
+            }
+        });
+    } catch (err) {
+        logger.error('Unable to change user password', err);
+        return next(
+            new AppError(
+                `something went wrong here is the error ${err}`,
+                statusCode.internalServerError()
+            )
+        );
+    }
+};
+
+export const updateMe = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const user: IUser | void = await userService.updateMe(req, next);
+        return res.status(statusCode.ok()).json({
+            status: 'success',
+            message: 'Profile updated successfully',
+            data: {
+                user
+            }
+        });
+    } catch (err) {
+        logger.error('Unable to update user profile', err);
         return next(
             new AppError(
                 `something went wrong here is the error ${err}`,

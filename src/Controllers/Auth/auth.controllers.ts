@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from 'express';
-import { IUser } from '../../Models/Users/user.models';
 import AppError from '../../Utils/Errors/appError';
 import { authService } from '../../Services/index';
 import { statusCode } from '../../Utils/helpers';
@@ -11,17 +10,14 @@ export const signUp = async (
     next: NextFunction
 ) => {
     try {
-        const user: IUser | void = await authService.signUp(req, next);
+        await authService.signUp(req, next);
         return res.status(statusCode.created()).json({
             status: 'success',
             message:
-                'Account successfully created, Check your mail for activation code',
-            data: {
-                user
-            }
+                'Account successfully created, Check your mail for activation code'
         });
     } catch (err) {
-        logger.error(err);
+        logger.error('unable to signup', err);
         return next(
             new AppError(
                 `something went wrong here is the error ${err}`,
@@ -46,7 +42,7 @@ export const activateUserAccount = async (
             });
         }
     } catch (err) {
-        logger.error(err);
+        logger.error('unable to activate email', err);
         return next(
             new AppError(
                 `something went wrong here is the error ${err}`,
@@ -69,7 +65,7 @@ export const login = async (
             response
         });
     } catch (err) {
-        logger.error(err);
+        logger.error('unable to login', err);
         return next(
             new AppError(
                 `something went wrong here is the error ${err}`,
@@ -91,7 +87,7 @@ export const resendOTP = async (
             message: 'OTP sent successful, please check your email'
         });
     } catch (err) {
-        logger.error(err);
+        logger.error('unable to send OTP', err);
         return next(
             new AppError(
                 `something went wrong here is the error ${err}`,
@@ -107,10 +103,10 @@ export const refreshToken = async (
     next: NextFunction
 ) => {
     try {
-        const verifiedToken = await authService.refreshToken(req, res, next);
-        return verifiedToken;
+        const user = await authService.refreshToken(req, res, next);
+        return user;
     } catch (err) {
-        logger.error(err);
+        logger.error('unable to send refresh token', err);
         return next(
             new AppError(
                 `something went wrong here is the error ${err}`,
@@ -135,7 +131,7 @@ export const forgotPassword = async (
             });
         }
     } catch (err) {
-        logger.error(err);
+        logger.error('Invalid forgot password email', err);
         return next(
             new AppError(
                 `something went wrong here is the error ${err}`,
@@ -159,7 +155,7 @@ export const resetPassword = async (
             });
         }
     } catch (err) {
-        logger.error(err);
+        logger.error('unable to reset password', err);
         return next(
             new AppError(
                 `something went wrong here is the error ${err}`,

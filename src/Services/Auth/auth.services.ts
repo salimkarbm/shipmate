@@ -4,7 +4,7 @@ import { IUser } from '../../Models/Users/user.models';
 import AppError from '../../Utils/Errors/appError';
 import Utilities, { statusCode } from '../../Utils/helpers';
 import { authRepository, userRepository } from '../../Repository/index';
-import { MalierService } from '../../Utils/Email/mailer';
+import { MalierService } from '../Email/mailer';
 
 const utils = new Utilities();
 const emailNotification = new MalierService();
@@ -41,7 +41,6 @@ export default class AuthService {
         const { OTP, otpExpiresAt } = await utils.generateOtpCode();
 
         const user: IUser = {
-            userId: utils.generateUUID(),
             firstName,
             lastName,
             email,
@@ -93,7 +92,8 @@ export default class AuthService {
                 )
             );
         }
-        if (user.OTP !== Number(OTP)) {
+
+        if (parseInt(user.OTP as string, 10) !== Number(OTP)) {
             throw next(new AppError('Invalid OTP', statusCode.unauthorized()));
         }
         if (user.isEmailVerified) {
@@ -109,7 +109,7 @@ export default class AuthService {
             email: user.email,
             subject: 'Shipmate Email Activation'
         });
-        if (emailData.accepted[0] === user.email) {
+        if (emailData.accepted[0] === user.email && user.userId) {
             await authRepository.activateUserAccount(user.userId);
             return user;
         }
@@ -166,6 +166,9 @@ export default class AuthService {
                     }
                 };
             }
+            throw next(
+                new AppError('Invalid Password', statusCode.badRequest())
+            );
         }
     }
 
@@ -215,7 +218,7 @@ export default class AuthService {
             user.OTP = 'undefined';
             user.passwordDigest = 'undefined';
             user.passwordResetOtp = 'undefine';
-            return res.status(200).json({
+            return res.status(statusCode.ok()).json({
                 accessToken,
                 refreshToken,
                 data: user

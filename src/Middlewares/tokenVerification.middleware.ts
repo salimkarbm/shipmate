@@ -1,4 +1,4 @@
-import { NextFunction, Response } from 'express';
+import { Request, NextFunction, Response } from 'express';
 import { JwtPayload } from 'jsonwebtoken';
 import UserRepository from '../Repository/Users/user.repository';
 import AppError from '../Utils/Errors/appError';
@@ -7,7 +7,11 @@ import Utilities, { statusCode } from '../Utils/helpers';
 const userRepository = new UserRepository();
 const util = new Utilities();
 
-const authenticate = async (req: any, res: Response, next: NextFunction) => {
+const authenticate = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
     try {
         let token;
         if (!req.headers.authorization) {
@@ -39,7 +43,7 @@ const authenticate = async (req: any, res: Response, next: NextFunction) => {
             );
         }
         const currentUser = await userRepository.findUserById(
-            decoded.payload.user_id
+            decoded.payload.userId
         );
         if (!currentUser) {
             return res.status(statusCode.unauthorized()).json({

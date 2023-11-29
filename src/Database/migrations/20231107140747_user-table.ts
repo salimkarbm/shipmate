@@ -3,12 +3,15 @@ import { Knex } from 'knex';
 export async function up(knex: Knex): Promise<void> {
     return knex.schema.createTable('users', (table) => {
         table.increments('id');
-        table.uuid('userId').primary().unique();
+        table
+            .uuid('userId')
+            .primary()
+            .defaultTo(knex.raw('uuid_generate_v4()'));
         table.string('firstName', 50).notNullable();
         table.string('lastName', 50).notNullable();
         table.string('passwordDigest', 100).notNullable();
         table.string('email', 100).unique().notNullable();
-        table.integer('OTP');
+        table.string('OTP');
         table.boolean('isEmailVerified').notNullable().defaultTo(false);
         table.boolean('isUserVerified').notNullable().defaultTo(false);
         table.string('otherName', 50);

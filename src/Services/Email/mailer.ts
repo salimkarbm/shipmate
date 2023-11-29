@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import nodemailer from 'nodemailer';
-import Utility from '../helpers';
+import Utility from '../../Utils/helpers';
 
 dotenv.config({ path: '.env' });
 

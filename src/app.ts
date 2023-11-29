@@ -1,7 +1,6 @@
 import cors from 'cors';
-// import dotenv
 import dotenv from 'dotenv';
-// import path from 'path';
+import path from 'path';
 
 // import express
 import express, { Application, Request, Response, NextFunction } from 'express';
@@ -10,13 +9,22 @@ import AppError from './Utils/Errors/appError';
 import { errorHandler } from './Middlewares/Errors/errorMiddleware';
 import logger from './Utils/Logger/index';
 import routes from './Routes/index';
-import DBsetUp from './Database/db.config';
+import db from './Database/db.config';
+import { statusCode } from './Utils/helpers';
 
 dotenv.config({ path: './env' });
 
-// Bind all Models to a knex instance.
-DBsetUp();
+// Bind all Models to a knex instance
+db.dbSetup();
 
+// Database connection
+db.onDatabaseConnect()
+    .then((result: any) => {
+        result.rowCount = 1
+            ? logger.info('Database connected')
+            : logger.info('Database not connected');
+    })
+    .catch((e: any) => logger.error(e));
 process.on('uncaughtException', (err) => {
     logger.error(err.name, err.message);
     logger.info('UNCAUGHT EXCEPTION! shutting down...');
@@ -32,13 +40,13 @@ const address = `0.0.0.0:${PORT}`;
 
 app.use(
     cors({
-        origin: ['http://localhost:8000', 'https://bca-healthcare.vercel.app'],
+        origin: ['http://localhost:3000', 'https://bca-healthcare.vercel.app'],
         methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
     })
 );
 
 // Load Staic Files
-// app.use(express.static(path.join(`${__dirname}/src`, '../public/')));
+app.use(express.static(path.join(`${__dirname}/src`, '../public/')));
 
 // Body parser middleware
 app.use(express.json());
@@ -51,18 +59,35 @@ app.get('/', async (req: Request, res: Response) => {
     res.json({ status: 'ok', message: 'Welcome' });
 });
 
+app.get(
+    '/shipmate',
+    async (req: Request, res: Response, next: NextFunction) => {
+        res.status(statusCode.ok()).json({
+            success: true,
+            message:
+                'welcome to shipmate Api, please find the documentation here: https://documentations ',
+            note: 'should you need any assistance kindly contact our support '
+        });
+    }
+);
+
 app.use('/api/v1', routes);
 
 app.all('*', (req: Request, res: Response, next: NextFunction) => {
-    next(new AppError(`can't find ${req.originalUrl} on server!`, 404));
+    next(
+        new AppError(
+            `can't find ${req.originalUrl} on server!`,
+            statusCode.notFound()
+        )
+    );
 });
 
 app.use(errorHandler);
 
 // Listen for server connections
-const server = app.listen(PORT, () =>
-    logger.info(`server running on ${address}`)
-);
+const server = app.listen(PORT, () => {
+    logger.info(`server running on ${address}`);
+});
 
 process.on('unhandledRejection', (err: any) => {
     logger.error(err.name, err.message);

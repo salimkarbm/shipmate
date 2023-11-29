@@ -33,4 +33,36 @@ export default class UserRepository {
         const users = await TABLE.USERS.query().select('*');
         return users as any;
     }
+
+    async updateUser(payload: IUser, userId: string): Promise<null | IUser> {
+        const user: any = await TABLE.USERS.query()
+            .where('userId', '=', userId)
+            .update(payload)
+            .returning('*');
+        return user[0] as IUser;
+    }
+
+    async updateUserEmail(
+        payload: string,
+        userId: string
+    ): Promise<null | IUser> {
+        const user: any = await TABLE.USERS.query()
+
+            .where('userId', '=', userId)
+            .update(payload)
+            .returning('*');
+        return user[0] as IUser;
+    }
+
+    async updateUserPassword(
+        payload: string,
+        userId: string
+    ): Promise<null | IUser> {
+        const user: any = await TABLE.USERS.query()
+
+            .where('userId', '=', userId)
+            .update({ passwordDigest: payload })
+            .returning('*');
+        return user[0] as IUser;
+    }
 }

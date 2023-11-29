@@ -11,7 +11,7 @@
         "format": "npm run prettier && npm run lint ",
         "prettier": "prettier --config .prettierrc --ignore-path .gitignore  --write './src/**/*.+(js|ts)'",
         "jest": "jest",
-        "start:dev": "npm run tsc && nodemon  ./src/app.ts",
+        "start:dev": "npm run tsc && nodemon --files ./src/app.ts",
         "start:prod": "npm run tsc && NODE_ENV=production nodemon ./src/app.js",
         "migrate:dev:up": "npx knex migrate:latest --knexfile ./src/Database/knexfile.ts --env development ",
         "migrate:dev:down": "npx knex migrate:down  --knexfile ./src/Database/knexfile.ts --env development ",

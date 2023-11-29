@@ -27,6 +27,7 @@ export default class AuthRepository {
                 OTP: payload.OTP,
                 otpExpiresAt: payload.otpExpiresAt
             })
+            .returning('*')
             .where({ email: payload.email });
         const user: IUser | null = await userRepository.findUserByEmail(
             payload.email
@@ -43,7 +44,8 @@ export default class AuthRepository {
             .patch({
                 passwordDigest: hashPassword
             })
-            .where({ email });
+            .where({ email })
+            .returning('*');
 
         const user: IUser | null = await userRepository.findUserByEmail(email);
         return updatedPerson ? (user as IUser) : null;

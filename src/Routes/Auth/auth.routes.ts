@@ -8,44 +8,36 @@ import {
     refreshTokenValidationRules,
     resetPasswordValidationRules
 } from '../../Middlewares/Auth/auth.middlewares';
-import {
-    activateUserAccount,
-    forgotPassword,
-    login,
-    refreshToken,
-    resendOTP,
-    resetPassword,
-    signUp
-} from '../../Controllers/Auth/auth.controllers';
+import auth from '../../Controllers/index';
 
 const router = Router();
 
-router.post('/signup', signUpValidationRules(), validate, signUp);
-router.post('/login', loginValidationRules(), validate, login);
-router.post('/resendOTP', OTPEmailValidationRules(), validate, resendOTP);
+router.post('/signup', signUpValidationRules(), validate, auth.signUp);
+router.post('/login', loginValidationRules(), validate, auth.login);
+router.post('/resendOTP', OTPEmailValidationRules(), validate, auth.resendOTP);
 router.post(
     '/resetPassword',
     resetPasswordValidationRules(),
     validate,
-    resetPassword
+    auth.resetPassword
 );
 router.post(
     '/forgotPassword',
     OTPEmailValidationRules(),
     validate,
-    forgotPassword
+    auth.forgotPassword
 );
 router.get(
     '/refreshToken',
     refreshTokenValidationRules(),
     validate,
-    refreshToken
+    auth.refreshToken
 );
 router.post(
     '/activateAccount',
     OTPEmailValidationRules(),
     validate,
-    activateUserAccount
+    auth.activateUserAccount
 );
 
 export default router;
