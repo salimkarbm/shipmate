@@ -1,5 +1,5 @@
 import { Request, NextFunction } from 'express';
-import { IUser } from '../../Models/Users/user.models';
+import { IUser } from '../../Models/Users/user.model';
 import { userRepository } from '../../Repository/index';
 import AppError from '../../Utils/Errors/appError';
 import Utilities, { statusCode, getFilePath } from '../../Utils/helpers';
@@ -135,25 +135,85 @@ export default class UserService {
                 }
             }
             const payload: any = {
-                firstName: user?.firstName || req.body.firstName,
-                lastName: user?.lastName || req.body.lastName,
-                otherName: user?.otherName || req.body.otherName,
-                bio: user?.bio || req.body.bio,
-                address: user?.address || req.body.address,
-                userType: user?.userType || req.body.userType,
-                gender: user?.gender || req.body.gender,
-                NIN: user?.NIN || req.body.NIN,
-                phoneNumber: user?.phoneNumber || req.body.phoneNumber,
-                profilePicture: user?.profilePicture || cloudinary?.secure_url,
+                firstName: req.body.firstName || user?.firstName,
+                lastName: req.body.lastName || user?.lastName,
+                otherName: req.body.otherName || user?.otherName,
+                bio: req.body.bio || user?.bio,
+                address: req.body.address || user?.address,
+                userType: req.body.userType || user?.userType,
+                gender: req.body.gender || user?.gender,
+                NIN: req.body.NIN || user?.NIN,
+                phoneNumber: req.body.phoneNumber || user?.phoneNumber,
+                profilePicture: cloudinary?.secure_url || user?.profilePicture,
                 profilePictureId:
-                    user?.profilePictureId || cloudinary?.public_id
+                    cloudinary?.public_id || user?.profilePictureId
             };
 
             const updatedUser: any = await userRepository.updateUser(
                 payload,
                 userId
             );
+            if (updatedUser.userType.toLowerCase() === 'traveller') {
+                const updatedUserProfile: any =
+                    await userRepository.updateIsProfileCompleteToTrue(userId);
+                return updatedUserProfile;
+            }
             return updatedUser;
+        }
+        throw next(new AppError('Not authorized', statusCode.unauthorized()));
+    }
+
+    public async addCar(
+        req: Request,
+        next: NextFunction
+    ): Promise<IUser | void> {
+        const { userId } = req.user;
+        if (userId) {
+            const user: IUser | null =
+                await userRepository.findUserById(userId);
+            if (!user) {
+                return next(
+                    new AppError('user not found', statusCode.notFound())
+                );
+            }
+            const carPhotoPath = getFilePath(req);
+            let cloudinary: any;
+            if (carPhotoPath) {
+                cloudinary = await util.cloudinaryUpload(carPhotoPath);
+                if (!cloudinary) {
+                    return next(
+                        new AppError(
+                            'Cloudinary not found! unable to upload image',
+                            statusCode.notFound()
+                        )
+                    );
+                }
+            }
+            const newCar: any = await userRepository.addCar({
+                ...req.body,
+                userId,
+                carPhoto: cloudinary.secure_url,
+                carPhotoId: cloudinary.public_id
+            });
+            const { userType } = user;
+            if (userType?.toLowerCase() === 'driver') {
+                const updatedUserProfile: any =
+                    await userRepository.updateIsProfileCompleteToTrue(userId);
+                return updatedUserProfile;
+            }
+            return newCar;
+        }
+        throw next(new AppError('Not authorized', statusCode.unauthorized()));
+    }
+
+    public async viewProfile(
+        req: Request,
+        next: NextFunction
+    ): Promise<IUser | void> {
+        const { userId } = req.user;
+        if (userId) {
+            const users: any = await userRepository.viewProfile(userId);
+            return users as IUser;
         }
         throw next(new AppError('Not authorized', statusCode.unauthorized()));
     }

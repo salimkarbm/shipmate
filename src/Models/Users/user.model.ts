@@ -1,4 +1,5 @@
 import { Model } from 'objection';
+import { Car } from '../Cars/car.model';
 
 export interface IUser {
     userId?: string;
@@ -39,4 +40,15 @@ export class User extends Model {
     static get tableName() {
         return 'users';
     }
+
+    static relationMappings = {
+        cars: {
+            relation: Model.HasManyRelation,
+            modelClass: Car,
+            join: {
+                from: 'users.userId',
+                to: 'cars.userId'
+            }
+        }
+    };
 }

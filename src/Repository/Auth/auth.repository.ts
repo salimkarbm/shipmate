@@ -1,4 +1,4 @@
-import { IUser, IUpdateOTP } from '../../Models/Users/user.models';
+import { IUser, IUpdateOTP } from '../../Models/Users/user.model';
 import TABLE from '../../Models/index';
 import { userRepository } from '../index';
 import Utilities from '../../Utils/helpers';

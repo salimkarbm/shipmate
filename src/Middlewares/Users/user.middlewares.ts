@@ -62,3 +62,33 @@ export const userProfileUpdateValidationRules = () => {
             .withMessage('Invalid URL for profile picture')
     ];
 };
+
+export const carValidationRules = () => {
+    return [
+        body('carBrand')
+            .isString()
+            .notEmpty()
+            .withMessage('Car Brand is required'),
+        body('carModel')
+            .isString()
+            .notEmpty()
+            .withMessage('car Model is required'),
+        body('carColor')
+            .isString()
+            .notEmpty()
+            .withMessage('Car Color is required'),
+        body('carRules')
+            .isString()
+            .notEmpty()
+            .withMessage('Car Rules is required'),
+        body('carRegistrationNumber')
+            .isString()
+            .notEmpty()
+            .withMessage('Car Registration Number is required'),
+        body('carPlateNumber')
+            .isString()
+            .notEmpty()
+            .withMessage('Car Plate Number is required'),
+        body('carPhoto').optional().isURL().withMessage('Invalid URL for Car')
+    ];
+};

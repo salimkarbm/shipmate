@@ -5,7 +5,8 @@ import authenticate from '../../Middlewares/tokenVerification.middleware';
 import {
     userIdValidationRules,
     userEmailValidationRules,
-    userProfileUpdateValidationRules
+    userProfileUpdateValidationRules,
+    carValidationRules
 } from '../../Middlewares/Users/user.middlewares';
 import user from '../../Controllers/index';
 import { upload } from '../../Utils/helpers';
@@ -27,8 +28,19 @@ router
     .patch(validate, authenticate, user.changeUserPassword);
 
 router
-    .route('/updateMe')
+    .route('/addCar')
+    .post(
+        upload.single('carPhoto'),
+        carValidationRules(),
+        validate,
+        authenticate,
+        user.addCar
+    );
 
+router.route('/viewProfile').get(authenticate, validate, user.viewUserProfile);
+
+router
+    .route('/updateMe')
     .patch(
         upload.single('profilePicture'),
         userProfileUpdateValidationRules(),

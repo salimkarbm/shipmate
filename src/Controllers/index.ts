@@ -12,7 +12,9 @@ import {
     findUsers,
     changeUserEmail,
     changeUserPassword,
-    updateMe
+    updateMe,
+    addCar,
+    viewUserProfile
 } from './Users/user.controllers';
 
 export default {
@@ -27,5 +29,7 @@ export default {
     findUsers,
     changeUserEmail,
     changeUserPassword,
-    updateMe
+    updateMe,
+    addCar,
+    viewUserProfile
 };

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import axios from 'axios';
-import { IUser } from '../../Models/Users/user.models';
+import { IUser } from '../../Models/Users/user.model';
 import AppError from '../../Utils/Errors/appError';
 import Utilities, { statusCode } from '../../Utils/helpers';
 import { authRepository, userRepository } from '../../Repository/index';

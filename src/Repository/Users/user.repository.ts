@@ -1,4 +1,5 @@
-import { IUser } from '../../Models/Users/user.models';
+import { IUser } from '../../Models/Users/user.model';
+import { ICar } from '../../Models/Cars/car.model';
 import TABLE from '../../Models/index';
 
 export default class UserRepository {
@@ -42,6 +43,14 @@ export default class UserRepository {
         return user[0] as IUser;
     }
 
+    async updateIsProfileCompleteToTrue(userId: string): Promise<null | IUser> {
+        const user: any = await TABLE.USERS.query()
+            .where('userId', '=', userId)
+            .update({ isProfileComplete: true })
+            .returning('*');
+        return user[0] as IUser;
+    }
+
     async updateUserEmail(
         payload: string,
         userId: string
@@ -64,5 +73,25 @@ export default class UserRepository {
             .update({ passwordDigest: payload })
             .returning('*');
         return user[0] as IUser;
+    }
+
+    async addCar(payload: ICar): Promise<ICar> {
+        const car: any = await TABLE.CARS.query().insert(payload);
+        return car as ICar;
+    }
+
+    async viewProfile(userId: string): Promise<IUser> {
+        const user: any = await TABLE.USERS.query()
+            .where('userId', userId)
+            .withGraphFetched('cars');
+        return user[0];
+    }
+
+    async findCarById(carId: string): Promise<ICar | null> {
+        const car: any = await TABLE.CARS.query().where('userId', carId);
+        if (car.length > 0) {
+            return car[0];
+        }
+        return null;
     }
 }

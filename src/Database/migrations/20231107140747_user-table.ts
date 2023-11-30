@@ -13,10 +13,9 @@ export async function up(knex: Knex): Promise<void> {
         table.string('email', 100).unique().notNullable();
         table.string('OTP');
         table.boolean('isEmailVerified').notNullable().defaultTo(false);
-        table.boolean('isUserVerified').notNullable().defaultTo(false);
         table.string('otherName', 50);
         table.text('bio');
-        table.text('address');
+        table.string('address');
         table.string('userType', 50);
         table.boolean('isProfileComplete').notNullable().defaultTo(false);
         table.string('gender', 50);
@@ -27,7 +26,9 @@ export async function up(knex: Knex): Promise<void> {
         table.string('role', 20).notNullable().defaultTo('user');
         table.boolean('isActive').notNullable().defaultTo(true);
         table.bigInteger('otpExpiresAt');
-        table.timestamps(true, true);
+        table.string('status').notNullable().defaultTo('unverified');
+        table.timestamp('createdAt').defaultTo(knex.fn.now());
+        table.timestamp('updatedAt').defaultTo(null);
     });
 }
 
