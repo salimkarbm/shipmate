@@ -6,7 +6,7 @@ import path from 'path';
 import express, { Application, Request, Response, NextFunction } from 'express';
 
 import AppError from './Utils/Errors/appError';
-import { errorHandler } from './Middlewares/Errors/errorMiddleware';
+import errorHandler from './Middlewares/Errors/errorMiddleware';
 import logger from './Utils/Logger/index';
 import routes from './Routes/index';
 import db from './Database/db.config';

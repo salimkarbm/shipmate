@@ -1,5 +1,5 @@
 import { Model } from 'objection';
-import { Car } from '../Cars/car.model';
+import { Car, ICar } from '../Cars/car.model';
 
 export interface IUser {
     userId?: string;
@@ -34,6 +34,10 @@ export interface IUpdateOTP {
     OTP: number | number;
     otpExpiresAt: number | string;
     email: string;
+}
+
+export interface IProfile extends IUser {
+    cars: [ICar];
 }
 
 export class User extends Model {

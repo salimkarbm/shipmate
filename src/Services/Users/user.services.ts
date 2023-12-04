@@ -1,5 +1,5 @@
 import { Request, NextFunction } from 'express';
-import { IUser } from '../../Models/Users/user.model';
+import { IUser, IProfile } from '../../Models/Users/user.model';
 import { userRepository } from '../../Repository/index';
 import AppError from '../../Utils/Errors/appError';
 import Utilities, { statusCode, getFilePath } from '../../Utils/helpers';
@@ -196,7 +196,7 @@ export default class UserService {
                 carPhotoId: cloudinary.public_id
             });
             const { userType } = user;
-            if (userType?.toLowerCase() === 'driver') {
+            if (userType?.toLowerCase() === 'Rider') {
                 const updatedUserProfile: any =
                     await userRepository.updateIsProfileCompleteToTrue(userId);
                 return updatedUserProfile;
@@ -209,11 +209,12 @@ export default class UserService {
     public async viewProfile(
         req: Request,
         next: NextFunction
-    ): Promise<IUser | void> {
+    ): Promise<IProfile | void> {
         const { userId } = req.user;
         if (userId) {
-            const users: any = await userRepository.viewProfile(userId);
-            return users as IUser;
+            const users: IProfile | null =
+                await userRepository.viewProfile(userId);
+            return users as IProfile;
         }
         throw next(new AppError('Not authorized', statusCode.unauthorized()));
     }

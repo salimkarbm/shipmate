@@ -1,4 +1,4 @@
-import { IUser } from '../../Models/Users/user.model';
+import { IProfile, IUser } from '../../Models/Users/user.model';
 import { ICar } from '../../Models/Cars/car.model';
 import TABLE from '../../Models/index';
 
@@ -80,7 +80,7 @@ export default class UserRepository {
         return car as ICar;
     }
 
-    async viewProfile(userId: string): Promise<IUser> {
+    async viewProfile(userId: string): Promise<IProfile | null> {
         const user: any = await TABLE.USERS.query()
             .where('userId', userId)
             .withGraphFetched('cars');
