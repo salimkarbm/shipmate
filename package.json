@@ -4,7 +4,7 @@
     "description": "project starter",
     "main": "dist/app.js",
     "scripts": {
-        "build": "tsc",
+        "build": "tsc && npm run migrate:prod:up",
         "start": "node dist/app.js",
         "postinstall": "tsc",
         "lint": "eslint --ext .ts . --fix",
