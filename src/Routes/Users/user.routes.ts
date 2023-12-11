@@ -18,7 +18,7 @@ router.route('/').get(validate, user.findUsers);
 router
     .route('/changeEmail')
     .patch(
-        userEmailValidationRules(),
+        userEmailValidationRules,
         validate,
         authenticate,
         user.changeUserEmail
@@ -50,6 +50,6 @@ router
     );
 router
     .route('/:userId')
-    .get(userIdValidationRules(), authenticate, validate, user.findUser);
+    .get(userIdValidationRules(), validate, authenticate, user.findUser);
 
 export default router;

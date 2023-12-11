@@ -3,3 +3,4 @@ package-lock.json
 dist
 .env
 public
+error.log

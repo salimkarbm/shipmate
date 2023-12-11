@@ -7,7 +7,8 @@ import { knexSnakeCaseMappers } from 'objection';
 
 dotenv.config({ path: `${appPath}/.env` });
 
-const { POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD, PROD_DB_URL } = process.env;
+const { POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD, PROD_DB_URL } =
+    process.env;
 
 export interface KnexPostgreSQLConfig {
     client: 'postgresql';

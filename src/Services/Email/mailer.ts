@@ -100,7 +100,7 @@ export class MalierService {
         Welcome to <strong>Shipmate</strong>,
          your account has been activated. Kindly login to continue.
     </p>
-    <p>Best Regards,
+    <p><b>Best Regards</b>,
             <br>Shipmate Team</p>
             </div>`;
         const result = await this.sendMail(options, message);

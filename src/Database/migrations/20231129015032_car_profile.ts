@@ -12,12 +12,16 @@ export async function up(knex: Knex): Promise<void> {
         table.string('carBrand');
         table.string('carPhoto');
         table.string('carPhotoId');
-        table.uuid('userId').references('users.userId').notNullable();
+        table
+            .uuid('userId')
+            .references('users.userId')
+            .notNullable()
+            .onDelete('CASCADE');
         table.timestamp('createdAt').defaultTo(knex.fn.now());
         table.timestamp('updatedAt').defaultTo(null);
     });
 }
 
 export async function down(knex: Knex): Promise<void> {
-    return knex.schema.dropTableIfExists('cars').dropTable('users');
+    return knex.schema.dropTableIfExists('cars');
 }

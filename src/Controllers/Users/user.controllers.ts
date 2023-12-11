@@ -37,13 +37,15 @@ export const findUser = async (
 ) => {
     try {
         const user: IUser | void = await userService.findUser(req, next);
-        return res.status(statusCode.ok()).json({
-            status: 'success',
-            message: 'User Fetch successfully',
-            data: {
-                user
-            }
-        });
+        if (user) {
+            return res.status(statusCode.ok()).json({
+                status: 'success',
+                message: 'User Fetch successfully',
+                data: {
+                    user
+                }
+            });
+        }
     } catch (err) {
         logger.error('unable to find user', err);
         return next(

@@ -15,19 +15,19 @@ export async function up(knex: Knex): Promise<void> {
         table.string('ItemImageId').notNullable();
         table.string('itemSize');
         table.string('specialHandlingInstructions');
+        table.boolean('insuranceCoverage').defaultTo(false);
         table.boolean('isDelivered').defaultTo(false);
         table.dateTime('deliveryDeadline').notNullable();
         table
             .uuid('userId')
-            .unsigned()
+            .references('users.userId')
             .notNullable()
-            .references('userId')
-            .inTable('users');
+            .onDelete('CASCADE');
         table.timestamp('createdAt').defaultTo(knex.fn.now());
         table.timestamp('updatedAt').defaultTo(null);
     });
 }
 
 export async function down(knex: Knex): Promise<void> {
-    return knex.schema.dropTableIfExists('users').dropTableIfExists('items');
+    return knex.schema.dropTableIfExists('items');
 }

@@ -23,7 +23,7 @@ export class Car extends Model {
     }
 
     static relationMappings = {
-        user: {
+        users: {
             relation: Model.BelongsToOneRelation,
             modelClass: User,
             join: {

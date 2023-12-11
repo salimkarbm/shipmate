@@ -21,10 +21,10 @@ export default class UserService {
     ): Promise<IUser | void> {
         const { userId } = req.params;
         const user = await userRepository.findUserById(userId);
-        if (user) {
+        if (typeof user === 'object' && user !== null) {
             return user as IUser;
         }
-        throw next(new AppError('User not found', statusCode.notFound()));
+        return next(new AppError('User not found', statusCode.notFound()));
     }
 
     public async changeUserEmail(
@@ -35,7 +35,7 @@ export default class UserService {
         if (userId) {
             const student: any = await userRepository.findUserById(userId);
             if (Object.keys(student).length !== 0) {
-                // update students data
+                // update user data
                 const user: any = await userRepository.updateUserEmail(
                     { ...req.body },
                     student.userId

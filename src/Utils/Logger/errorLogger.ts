@@ -18,7 +18,10 @@ export const devErrorLog: ErrorLogFunction = () => {
             timestamp({ format: 'HH:mm:ss' }),
             myFormat
         ),
-        transports: [new transports.Console()]
+        transports: [
+            new transports.Console(),
+            new transports.File({ filename: 'error.log', level: 'error' })
+        ]
     });
 };
 

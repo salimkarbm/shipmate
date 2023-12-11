@@ -53,6 +53,15 @@ export class User extends Model {
                 from: 'users.userId',
                 to: 'cars.userId'
             }
+        },
+
+        trips: {
+            relation: Model.HasManyRelation,
+            modelClass: Car,
+            join: {
+                from: 'users.userId',
+                to: 'trips.userId'
+            }
         }
     };
 }

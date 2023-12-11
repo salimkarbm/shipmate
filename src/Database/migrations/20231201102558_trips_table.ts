@@ -14,22 +14,24 @@ export async function up(knex: Knex): Promise<void> {
         table.string('destinationLocation');
         table.string('estimatedDurationOfTrip');
         table.string('arrivalDate');
-        table.string('travelMode');
+        table.string('transportationMode');
         table.string('preferredItemType');
         table.string('acceptableLuggageSize');
         table.string('emergencyContactName');
         table.string('emergencyContactPhoneNumber');
-        table.string('insuranceCoverage');
-        table.string('isPickupFromCustomerAddress');
+        table.boolean('isPickupFromCustomerAddress').defaultTo(false);
         table
             .boolean('isdeliverToCustomerAddress')
             .notNullable()
             .defaultTo(false);
         table.string('arrivalPickupAddress');
-        table.boolean('itemPickupAddress').notNullable().defaultTo(false);
+        table.string('itemPickupAddress');
         table.boolean('isApproved').notNullable().defaultTo(true);
-        table.text('specialHandlingRequirements');
-        table.uuid('userId').references('users.userId').notNullable();
+        table
+            .uuid('userId')
+            .references('users.userId')
+            .notNullable()
+            .onDelete('CASCADE');
         table.string('acceptableDeliveryDeadline');
         table.timestamp('createdAt').defaultTo(knex.fn.now());
         table.timestamp('updatedAt').defaultTo(null);
@@ -37,5 +39,5 @@ export async function up(knex: Knex): Promise<void> {
 }
 
 export async function down(knex: Knex): Promise<void> {
-    return knex.schema.dropTableIfExists('users').dropTable('trips');
+    return knex.schema.dropTableIfExists('trips');
 }

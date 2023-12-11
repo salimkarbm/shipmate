@@ -74,7 +74,7 @@ app.get(
 app.use('/api/v1', routes);
 
 app.all('*', (req: Request, res: Response, next: NextFunction) => {
-    next(
+    throw next(
         new AppError(
             `can't find ${req.originalUrl} on server!`,
             statusCode.notFound()

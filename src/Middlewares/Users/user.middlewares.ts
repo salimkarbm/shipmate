@@ -16,7 +16,7 @@ export const userEmailValidationRules = () => {
         body('email')
             .trim()
             .notEmpty()
-            .withMessage('Email ID is required')
+            .withMessage('Email is required')
             .isString()
             .withMessage('Email must be a string')
     ];

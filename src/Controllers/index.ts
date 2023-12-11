@@ -17,6 +17,8 @@ import {
     viewUserProfile
 } from './Users/user.controllers';
 
+import { findTrip, findTrips, addTrip } from './Trips/trip.controllers';
+
 export default {
     signUp,
     activateUserAccount,
@@ -31,5 +33,8 @@ export default {
     changeUserPassword,
     updateMe,
     addCar,
-    viewUserProfile
+    viewUserProfile,
+    findTrip,
+    findTrips,
+    addTrip
 };

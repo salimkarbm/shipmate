@@ -9,7 +9,7 @@ const validate = (req: Request, res: Response, next: NextFunction) => {
     const resultErrors = [];
     errors
         .array()
-        .map((err: any) => resultErrors.push({ [err.path]: err.msg }));
+        .map((err: any) => resultErrors.push({ [err.type]: err.msg }));
 
     resultErrors.push({ message: 'Action unsuccessful' });
     resultErrors.push({ success: false });

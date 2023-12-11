@@ -1,5 +1,7 @@
 import AuthService from './Auth/auth.services';
 import UserService from './Users/user.services';
+import TripService from './Trips/trip.services';
 
 export const authService = new AuthService();
 export const userService = new UserService();
+export const tripService = new TripService();
