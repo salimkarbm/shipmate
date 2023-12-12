@@ -15,6 +15,8 @@ router
     .post(tripValidationRules(), validate, authenticate, trip.addTrip)
     .get(validate, authenticate, trip.findTrips);
 
+router.route('/user').get(validate, authenticate, trip.findUserTrips);
+
 router
     .route('/:tripId')
     .get(tripIdValidationRules(), validate, authenticate, trip.findTrip);

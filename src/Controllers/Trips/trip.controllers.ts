@@ -81,3 +81,28 @@ export const findTrip = async (
         );
     }
 };
+
+export const findUserTrips = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const trip: ITrip[] | void = await tripService.findUserTrips(req, next);
+        return res.status(statusCode.ok()).json({
+            status: 'success',
+            message: 'Trips Fetch successfully',
+            data: {
+                trip
+            }
+        });
+    } catch (err) {
+        logger.error('unable to find trips', err);
+        return next(
+            new AppError(
+                `something went wrong here is the error ${err}`,
+                statusCode.internalServerError()
+            )
+        );
+    }
+};

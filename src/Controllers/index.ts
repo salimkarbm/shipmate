@@ -17,7 +17,12 @@ import {
     viewUserProfile
 } from './Users/user.controllers';
 
-import { findTrip, findTrips, addTrip } from './Trips/trip.controllers';
+import {
+    findTrip,
+    findTrips,
+    addTrip,
+    findUserTrips
+} from './Trips/trip.controllers';
 
 export default {
     signUp,
@@ -36,5 +41,6 @@ export default {
     viewUserProfile,
     findTrip,
     findTrips,
-    addTrip
+    addTrip,
+    findUserTrips
 };

@@ -4,7 +4,9 @@ import TABLE from '../../Models/index';
 
 export default class UserRepository {
     async findUserById(userId: string): Promise<IUser | null> {
-        const user: any = await TABLE.USERS.query().where('userId', userId);
+        const user: any = await TABLE.USERS.query()
+            .where('userId', userId)
+            .withGraphFetched('cars');
         if (user.length > 0) {
             return user[0];
         }
@@ -31,7 +33,9 @@ export default class UserRepository {
     }
 
     async findUsers(): Promise<IUser[]> {
-        const users = await TABLE.USERS.query().select('*');
+        const users = await TABLE.USERS.query()
+            .select('*')
+            .withGraphFetched('cars');
         return users as any;
     }
 

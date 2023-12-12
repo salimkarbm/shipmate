@@ -47,4 +47,26 @@ export default class TripService {
         }
         throw next(new AppError('Not authorized', statusCode.unauthorized()));
     }
+
+    public async findUserTrips(
+        req: Request,
+        next: NextFunction
+    ): Promise<ITrip[] | void> {
+        const { userId } = req.user;
+        console.log(userId);
+        if (userId) {
+            const user: IUser | null =
+                await userRepository.findUserById(userId);
+            if (!user) {
+                return next(
+                    new AppError('user not found', statusCode.notFound())
+                );
+            }
+            const trips = await tripRepository.findUserTrips(
+                user.userId as unknown as string
+            );
+            return trips as ITrip[];
+        }
+        throw next(new AppError('Not authorized', statusCode.unauthorized()));
+    }
 }

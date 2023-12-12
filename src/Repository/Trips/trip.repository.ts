@@ -24,11 +24,14 @@ export default class TripRepository {
         return trips as any;
     }
 
-    async findOneTrip(tripId: string): Promise<ITrip | null> {
-        const trip: any = await TABLE.USERS.query()
-            .where('tripId', tripId)
+    async findUserTrips(userId: string): Promise<ITrip[] | null> {
+        const trip: any = await TABLE.TRIPS.query()
+            .where('userId', userId)
             .withGraphFetched('users');
-        return trip[0];
+        if (trip.length > 0) {
+            return trip;
+        }
+        return null;
     }
 
     async updateTrip(payload: ITrip, tripId: string): Promise<null | ITrip> {
