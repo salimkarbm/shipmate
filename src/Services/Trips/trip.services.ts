@@ -19,8 +19,11 @@ export default class TripService {
         next: NextFunction
     ): Promise<ITrip | void> {
         const { tripId } = req.params;
-        const trip = await tripRepository.findTripById(tripId);
+        const trip: ITrip | null = await tripRepository.findTripById(tripId);
+
         if (typeof trip === 'object' && trip !== null) {
+            trip.users.OTP = 'undefined';
+            trip.users.otpExpiresAt = undefined;
             return trip as ITrip;
         }
         return next(new AppError('Trip not found', statusCode.notFound()));
@@ -53,7 +56,6 @@ export default class TripService {
         next: NextFunction
     ): Promise<ITrip[] | void> {
         const { userId } = req.user;
-        console.log(userId);
         if (userId) {
             const user: IUser | null =
                 await userRepository.findUserById(userId);

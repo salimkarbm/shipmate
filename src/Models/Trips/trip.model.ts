@@ -1,5 +1,5 @@
 import { Model } from 'objection';
-import { User } from '../Users/user.model';
+import { IUser, User } from '../Users/user.model';
 
 export interface ITrip {
     tripId?: string;
@@ -20,6 +20,7 @@ export interface ITrip {
     itemPickupAddress?: string;
     userId: string;
     acceptableDeliveryDeadline?: number;
+    users: IUser;
 }
 
 export class Trip extends Model {

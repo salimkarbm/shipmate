@@ -24,6 +24,13 @@ import {
     findUserTrips
 } from './Trips/trip.controllers';
 
+import {
+    findDeliveryItem,
+    findDeliveryItems,
+    addDeliveryItem,
+    findUserDeliveryItems
+} from './Deliveries/delivery.controllers';
+
 export default {
     signUp,
     activateUserAccount,
@@ -42,5 +49,9 @@ export default {
     findTrip,
     findTrips,
     addTrip,
-    findUserTrips
+    findUserTrips,
+    findDeliveryItem,
+    findDeliveryItems,
+    addDeliveryItem,
+    findUserDeliveryItems
 };
