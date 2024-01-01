@@ -16,11 +16,24 @@ export async function up(knex: Knex): Promise<void> {
         table.string('itemSize');
         table.string('specialHandlingInstructions');
         table.boolean('insuranceCoverage').defaultTo(false);
-        table.boolean('isDelivered').defaultTo(false);
         table.dateTime('deliveryDeadline').notNullable();
+        table
+            .enu('ItemStatus', [
+                'pending',
+                'in_progress',
+                'completed',
+                'cancelled',
+                'delivered'
+            ])
+            .defaultTo('pending');
         table
             .uuid('userId')
             .references('users.userId')
+            .notNullable()
+            .onDelete('CASCADE');
+        table
+            .uuid('tripId')
+            .references('trips.tripId')
             .notNullable()
             .onDelete('CASCADE');
         table.timestamp('createdAt').defaultTo(knex.fn.now());

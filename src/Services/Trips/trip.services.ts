@@ -56,7 +56,7 @@ export default class TripService {
         next: NextFunction
     ): Promise<ITrip[] | void> {
         const { userId } = req.user;
-        if (userId) {
+        if (userId === req.params.userId) {
             const user: IUser | null =
                 await userRepository.findUserById(userId);
             if (!user) {

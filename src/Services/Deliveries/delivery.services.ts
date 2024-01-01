@@ -80,7 +80,7 @@ export default class DeliveryItemService {
         next: NextFunction
     ): Promise<IDeliveryItem[] | void> {
         const { userId } = req.user;
-        if (userId) {
+        if (userId === req.params.userId) {
             const user: IUser | null =
                 await userRepository.findUserById(userId);
             if (!user) {

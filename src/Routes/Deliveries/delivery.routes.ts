@@ -6,6 +6,7 @@ import {
     deliveryValidationRules,
     deliveryIdValidationRules
 } from '../../Middlewares/Deliveries/delivery.middlewares';
+import { userIdValidationRules } from '../../Middlewares/Users/user.middlewares';
 import item from '../../Controllers/index';
 import { upload } from '../../Utils/helpers';
 
@@ -22,7 +23,14 @@ router
     )
     .get(validate, item.findDeliveryItems);
 
-router.route('/user').get(validate, authenticate, item.findUserDeliveryItems);
+router
+    .route('/:userId')
+    .get(
+        userIdValidationRules(),
+        validate,
+        authenticate,
+        item.findUserDeliveryItems
+    );
 
 router
     .route('/:itemId')

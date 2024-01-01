@@ -6,6 +6,7 @@ import {
     tripValidationRules,
     tripIdValidationRules
 } from '../../Middlewares/Trips/trip.middlewares';
+import { userIdValidationRules } from '../../Middlewares/Users/user.middlewares';
 import trip from '../../Controllers/index';
 
 const router = Router();
@@ -15,7 +16,9 @@ router
     .post(tripValidationRules(), validate, authenticate, trip.addTrip)
     .get(validate, authenticate, trip.findTrips);
 
-router.route('/user').get(validate, authenticate, trip.findUserTrips);
+router
+    .route('/:userId')
+    .get(userIdValidationRules(), validate, authenticate, trip.findUserTrips);
 
 router
     .route('/:tripId')

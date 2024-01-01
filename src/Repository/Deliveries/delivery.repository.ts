@@ -10,7 +10,8 @@ export default class DeliveryItemRepository {
     async findDeliveryItemById(itemId: string): Promise<IDeliveryItem | null> {
         const delivery: any = await TABLE.ITEMS.query()
             .where('itemId', itemId)
-            .withGraphFetched('users');
+            .withGraphFetched('users')
+            .withGraphFetched('trips');
         if (delivery.length > 0) {
             return delivery[0];
         }
@@ -20,7 +21,8 @@ export default class DeliveryItemRepository {
     async findDeliveryItems(): Promise<IDeliveryItem[]> {
         const deliveries = await TABLE.ITEMS.query()
             .select('*')
-            .withGraphFetched('users');
+            .withGraphFetched('users')
+            .withGraphFetched('trips');
         return deliveries as any;
     }
 
@@ -29,7 +31,8 @@ export default class DeliveryItemRepository {
     ): Promise<IDeliveryItem[] | null> {
         const deliveries: any = await TABLE.ITEMS.query()
             .where('userId', userId)
-            .withGraphFetched('users');
+            .withGraphFetched('users')
+            .withGraphFetched('trips');
         if (deliveries.length > 0) {
             return deliveries;
         }

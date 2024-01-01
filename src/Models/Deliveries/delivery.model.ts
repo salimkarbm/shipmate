@@ -1,5 +1,6 @@
 import { Model } from 'objection';
 import { User } from '../Users/user.model';
+import { Trip } from '../Trips/trip.model';
 
 export interface IDeliveryItem {
     deliveryId?: string;
@@ -32,6 +33,15 @@ export class Item extends Model {
             join: {
                 from: 'items.userId',
                 to: 'users.userId'
+            }
+        },
+
+        trips: {
+            relation: Model.BelongsToOneRelation,
+            modelClass: Trip,
+            join: {
+                from: 'items.tripId',
+                to: 'trips.tripId'
             }
         }
     };
