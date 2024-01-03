@@ -21,10 +21,9 @@ export default class DeliveryItemService {
         const excludeValues = ['limit', 'page', 'fields', 'sort'];
         excludeValues.forEach((el) => delete queryObj[el]);
 
-        const features = new ApiFeatures(
-            TABLE.ITEMS.query(),
-            req.query
-        ).filter();
+        const features = new ApiFeatures(TABLE.ITEMS.query(), req.query)
+            .filter()
+            .paginate();
         // EXECUTE QUERY
         const deliveries = await features.dbQueryBulder;
         return deliveries;

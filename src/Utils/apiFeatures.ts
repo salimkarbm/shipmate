@@ -27,4 +27,14 @@ export default class ApiFeatures {
             .withGraphFetched('trips');
         return this;
     }
+
+    paginate() {
+        // pagination
+        const page = parseInt(this.reqQuery.page, 10) || 1;
+        const limit = parseInt(this.reqQuery.limit, 10) || 100;
+        const skip = (page - 1) * limit;
+
+        this.dbQueryBulder = this.dbQueryBulder.offset(skip).limit(limit);
+        return this;
+    }
 }
