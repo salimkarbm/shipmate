@@ -37,4 +37,15 @@ export default class ApiFeatures {
         this.dbQueryBulder = this.dbQueryBulder.offset(skip).limit(limit);
         return this;
     }
+
+    // sorting
+    sort() {
+        if (this.reqQuery.sort) {
+            const sortBy = this.reqQuery.sort.split(',').join(' ');
+            this.dbQueryBulder = this.dbQueryBulder.orderBy(sortBy, 'desc');
+        } else {
+            this.dbQueryBulder = this.dbQueryBulder.orderBy('createdAt');
+        }
+        return this;
+    }
 }

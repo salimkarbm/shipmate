@@ -23,7 +23,8 @@ export default class DeliveryItemService {
 
         const features = new ApiFeatures(TABLE.ITEMS.query(), req.query)
             .filter()
-            .paginate();
+            .paginate()
+            .sort();
         // EXECUTE QUERY
         const deliveries = await features.dbQueryBulder;
         return deliveries;
