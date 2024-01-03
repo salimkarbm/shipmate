@@ -2,7 +2,10 @@ import { Request, NextFunction } from 'express';
 import { IUser, IProfile } from '../../Models/Users/user.model';
 import { userRepository } from '../../Repository/index';
 import AppError from '../../Utils/Errors/appError';
-import Utilities, { statusCode, getFilePath } from '../../Utils/helpers';
+import Utilities, { statusCode } from '../../Utils/helpers';
+import Media from '../../Utils/media/media';
+
+const image = new Media();
 
 const util = new Utilities();
 
@@ -115,16 +118,16 @@ export default class UserService {
                     new AppError('user not found', statusCode.notFound())
                 );
             }
-            const profilePicturePath = getFilePath(req);
+            const profilePicturePath = image.getFilePath(req);
             let cloudinary: any;
             if (profilePicturePath) {
                 if (user?.profilePictureId) {
                     // Delete the existing profile Picture using the correct profile Picture Id
-                    await util.cloudinaryDestroy(
+                    await image.cloudinaryDestroy(
                         user?.profilePictureId as string
                     );
                 }
-                cloudinary = await util.cloudinaryUpload(profilePicturePath);
+                cloudinary = await image.cloudinaryUpload(profilePicturePath);
                 if (!cloudinary) {
                     return next(
                         new AppError(
@@ -176,10 +179,10 @@ export default class UserService {
                     new AppError('user not found', statusCode.notFound())
                 );
             }
-            const carPhotoPath = getFilePath(req);
+            const carPhotoPath = image.getFilePath(req);
             let cloudinary: any;
             if (carPhotoPath) {
-                cloudinary = await util.cloudinaryUpload(carPhotoPath);
+                cloudinary = await image.cloudinaryUpload(carPhotoPath);
                 if (!cloudinary) {
                     return next(
                         new AppError(

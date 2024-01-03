@@ -38,11 +38,14 @@ export const findDeliveryItems = async (
     next: NextFunction
 ) => {
     try {
-        const deliveries: IDeliveryItem[] | void =
-            await deliveryItemService.findDeliveryItems(req, next);
+        const deliveries: any = await deliveryItemService.findDeliveryItems(
+            req,
+            next
+        );
         return res.status(statusCode.ok()).json({
             status: 'success',
             message: 'Deliveries Fetch successfully',
+            result: deliveries.length,
             data: {
                 deliveries
             }

@@ -15,6 +15,7 @@ export interface IDeliveryItem {
     specialHandlingInstructions: string;
     insuranceCoverage: boolean;
     deliveryDeadline: Date;
+    readonly length: number;
 }
 
 export class Item extends Model {

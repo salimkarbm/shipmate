@@ -8,14 +8,16 @@ import {
 } from '../../Middlewares/Deliveries/delivery.middlewares';
 import { userIdValidationRules } from '../../Middlewares/Users/user.middlewares';
 import item from '../../Controllers/index';
-import { upload } from '../../Utils/helpers';
+import Media from '../../Utils/media/media';
+
+const image = new Media();
 
 const router = Router();
 
 router
     .route('/')
     .post(
-        upload.single('itemImage'),
+        image.upload.single('itemImage'),
         deliveryValidationRules(),
         validate,
         authenticate,

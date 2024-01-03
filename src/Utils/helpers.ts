@@ -1,10 +1,6 @@
 import bcrypt from 'bcrypt';
 import 'dotenv/config';
-import { v2 as cloudinary } from 'cloudinary';
 import { convert } from 'html-to-text';
-import path from 'path';
-import fs from 'fs';
-import multer from 'multer';
 import { v4 as uuidv4 } from 'uuid';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import UserRepository from '../Repository/Users/user.repository';
@@ -18,30 +14,6 @@ export default class Utilities {
     private saltRound = Number(process.env.SALT_ROUNDS);
 
     private accessToken = process.env.ACCESSTOKENSECRET as string;
-
-    public async cloudinaryUpload(url: string) {
-        if (url) {
-            cloudinary.config({
-                cloud_name: process.env.CLOUDINARY_NAME,
-                api_key: process.env.CLOUDINARY_API_KEY,
-                api_secret: process.env.CLOUDINARY_API_SECRET
-            });
-            const upload = await cloudinary.uploader.upload(url, {
-                folder: 'Shipmate'
-            });
-            return upload;
-        }
-    }
-
-    public async cloudinaryDestroy(publicId: string) {
-        cloudinary.config({
-            cloud_name: process.env.CLOUDINARY_NAME,
-            api_key: process.env.CLOUDINARY_API_KEY,
-            api_secret: process.env.CLOUDINARY_API_SECRET
-        });
-        const upload = await cloudinary.uploader.destroy(publicId);
-        return upload;
-    }
 
     public async verifyJWT(token: string) {
         try {
@@ -251,66 +223,3 @@ export const statusCode = {
         return 504;
     }
 };
-
-// Get single file path
-export const getFilePath = (req: any) => {
-    const filePath = req.file;
-    if (filePath) {
-        const file = String(filePath.path);
-        return file;
-    }
-};
-// Get multiple file path
-export const getMultipleFilePath = (req: any): any => {
-    const { files } = req;
-    const file1 = String(files[0] && files[0].path);
-    const file2 = String(files[0] && files[1].path);
-    return {
-        file1,
-        file2
-    };
-};
-// create folder to store images/files
-export const fileStorageEngine = multer.diskStorage({
-    destination: (req: any, file: any, cb: any) => {
-        const dir = `${path.normalize(path.join(__dirname, '../images'))}`;
-        if (!fs.existsSync(dir)) {
-            fs.mkdirSync(dir);
-        }
-        cb(null, dir);
-    },
-
-    filename: (req: any, file: any, cb: any) => {
-        cb(null, `${Date.now()}--${path.extname(file.originalname)}`);
-    }
-});
-
-// check file/images
-export const fileFilter = (req: any, file: any, cb: any) => {
-    if (
-        file.mimetype === 'image/jpeg' ||
-        file.mimetype === 'image/png' ||
-        file.mimetype === 'image/jpg'
-    ) {
-        cb(null, true);
-    } else if (file.mimetype === 'application/pdf') {
-        cb(null, true);
-    } else {
-        cb({ message: `Unsupported file format ${file.mimetype}` });
-    }
-};
-
-export const upload = multer({
-    storage: fileStorageEngine,
-    limits: { fileSize: 4200 * 3800 },
-    fileFilter
-});
-
-// upload  multiple files at once
-export const multipleUpload = upload.fields([
-    { name: 'file1', maxCount: 1 },
-    { name: 'file2', maxCount: 1 },
-    { name: 'file3', maxCount: 1 },
-    { name: 'file4', maxCount: 1 },
-    { name: 'file5', maxCount: 1 }
-]);

@@ -3,18 +3,40 @@ import { IDeliveryItem } from '../../Models/Deliveries/delivery.model';
 import { IUser } from '../../Models/Users/user.model';
 import { deliveryItemRepository, userRepository } from '../../Repository/index';
 import AppError from '../../Utils/Errors/appError';
-import Utilities, { statusCode, getFilePath } from '../../Utils/helpers';
+import { statusCode } from '../../Utils/helpers';
+import Media from '../../Utils/media/media';
+import ApiFeatures from '../../Utils/apiFeatures';
+import TABLE from '../../Models/index';
 
-const util = new Utilities();
+const image = new Media();
 
 export default class DeliveryItemService {
     public async findDeliveryItems(
         req: Request,
         next: NextFunction
     ): Promise<IDeliveryItem[] | void> {
-        const items = await deliveryItemRepository.findDeliveryItems();
-        return items as IDeliveryItem[];
+        // Build Query
+        // 1a) Filtering
+        const queryObj = { ...req.query };
+        const excludeValues = ['limit', 'page', 'fields', 'sort'];
+        excludeValues.forEach((el) => delete queryObj[el]);
+
+        const features = new ApiFeatures(
+            TABLE.ITEMS.query(),
+            req.query
+        ).filter();
+        // EXECUTE QUERY
+        const deliveries = await features.dbQueryBulder;
+        return deliveries;
     }
+
+    // public async findDeliveryItems(
+    //     req: Request,
+    //     next: NextFunction
+    // ): Promise<IDeliveryItem[] | void> {
+    //     const items = await deliveryItemRepository.findDeliveryItems();
+    //     return items as IDeliveryItem[];
+    // }
 
     public async findDeliveryItem(
         req: Request,
@@ -45,7 +67,7 @@ export default class DeliveryItemService {
                     new AppError('user not found', statusCode.notFound())
                 );
             }
-            const itemImagePath = getFilePath(req);
+            const itemImagePath = image.getFilePath(req);
             if (!itemImagePath) {
                 return next(
                     new AppError(
@@ -54,7 +76,7 @@ export default class DeliveryItemService {
                     )
                 );
             }
-            const cloudinary = await util.cloudinaryUpload(itemImagePath);
+            const cloudinary = await image.cloudinaryUpload(itemImagePath);
             if (!cloudinary) {
                 return next(
                     new AppError(
