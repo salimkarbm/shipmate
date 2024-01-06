@@ -15,28 +15,15 @@ export default class DeliveryItemService {
         req: Request,
         next: NextFunction
     ): Promise<IDeliveryItem[] | void> {
-        // Build Query
-        // 1a) Filtering
-        const queryObj = { ...req.query };
-        const excludeValues = ['limit', 'page', 'fields', 'sort'];
-        excludeValues.forEach((el) => delete queryObj[el]);
-
         const features = new ApiFeatures(TABLE.ITEMS.query(), req.query)
             .filter()
             .paginate()
-            .sort();
+            .sort()
+            .limit();
         // EXECUTE QUERY
         const deliveries = await features.dbQueryBulder;
         return deliveries;
     }
-
-    // public async findDeliveryItems(
-    //     req: Request,
-    //     next: NextFunction
-    // ): Promise<IDeliveryItem[] | void> {
-    //     const items = await deliveryItemRepository.findDeliveryItems();
-    //     return items as IDeliveryItem[];
-    // }
 
     public async findDeliveryItem(
         req: Request,
@@ -89,8 +76,8 @@ export default class DeliveryItemService {
                 await deliveryItemRepository.addDeliveryItem({
                     ...req.body,
                     userId,
-                    ItemImage: cloudinary.secure_url,
-                    ItemImageId: cloudinary.public_id
+                    itemImage: cloudinary.secure_url,
+                    itemImageId: cloudinary.public_id
                 });
             return newDeliveryItem;
         }

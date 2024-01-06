@@ -48,4 +48,15 @@ export default class ApiFeatures {
         }
         return this;
     }
+
+    limit() {
+        // field limiting or projecting
+        if (this.reqQuery.fields) {
+            const fields = this.reqQuery.fields.split(',').join(' ');
+            this.dbQueryBulder = this.dbQueryBulder.select(fields);
+        } else {
+            this.dbQueryBulder = this.dbQueryBulder.select('*');
+        }
+        return this;
+    }
 }

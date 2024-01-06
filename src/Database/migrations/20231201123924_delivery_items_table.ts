@@ -11,16 +11,17 @@ export async function up(knex: Knex): Promise<void> {
         table.string('pickUpAddress').notNullable();
         table.string('dropOffAddress').notNullable();
         table.string('itemCategory').notNullable();
-        table.string('ItemImage').notNullable();
-        table.string('ItemImageId').notNullable();
+        table.string('itemImage').notNullable();
+        table.string('itemImageId').notNullable();
+        table.json('itemDimension');
         table.string('itemSize');
         table.string('specialHandlingInstructions');
         table.boolean('insuranceCoverage').defaultTo(false);
         table.dateTime('deliveryDeadline').notNullable();
         table
-            .enu('ItemStatus', [
+            .enu('itemStatus', [
                 'pending',
-                'in_progress',
+                'inProgress',
                 'completed',
                 'cancelled',
                 'delivered'

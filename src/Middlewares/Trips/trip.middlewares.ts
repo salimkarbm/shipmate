@@ -21,13 +21,13 @@ export const tripValidationRules = () => {
             .isString()
             .withMessage('Departure City must be a string'),
 
-        // Arrival City
-        body('arrivalCity')
+        // Destination City
+        body('destinationCity')
             .trim()
             .notEmpty()
-            .withMessage('Arrival City is required.')
+            .withMessage('Destination City is required.')
             .isString()
-            .withMessage('Arrival City must be a string'),
+            .withMessage('Destination City must be a string'),
 
         // Departure Date
         body('departureDate')
@@ -49,24 +49,16 @@ export const tripValidationRules = () => {
         body('destinationLocation')
             .trim()
             .notEmpty()
-            .withMessage('Destination sLocation is required.')
+            .withMessage('Destination Location is required.')
             .isString()
             .withMessage('Destination Location must be a string'),
 
-        // Estimated Duration of Trip
-        body('estimatedDurationOfTrip')
+        // Estimated Duration of Arrival
+        body('estimatedTimeOfArrival')
             .trim()
             .isString()
-            .withMessage('Estimated Duration of Trip must be a string.')
+            .withMessage('Estimated Time of Arrival must be a string.')
             .optional({ checkFalsy: true }),
-
-        // Arrival Date
-        body('arrivalDate')
-            .trim()
-            .notEmpty()
-            .withMessage('Arrival Date is required.')
-            .isDate()
-            .withMessage('Arrival Date must be a valid date.'),
 
         // Travel Mode
         body('transportationMode')
@@ -110,20 +102,12 @@ export const tripValidationRules = () => {
 
         // Is Pickup From Customer Address
         // (Optional)
-        body('isPickupFromCustomerAddress')
+        body('wePickupFromCustomerAddress')
             .trim()
             .isBoolean()
             .withMessage(
                 'Is Pickup From Customer Address must be a boolean value.'
             )
-            .optional({ checkFalsy: true }),
-
-        // item Pickup Address
-        // (Optional)
-        body('itemPickupAddress')
-            .trim()
-            .isString()
-            .withMessage('Item Pickup Address must be a string.')
             .optional({ checkFalsy: true }),
 
         // Arrival Pickup Address
@@ -136,10 +120,17 @@ export const tripValidationRules = () => {
 
         // Acceptable Delivery Deadline
         // (Optional)
-        body('acceptableDeliveryDeadline')
+
+        body('acceptingDeliveryFrom')
             .trim()
-            .isInt()
-            .withMessage('Acceptable Delivery Deadline must be an integer.')
+            .isString()
+            .withMessage('Acceptable Delivery Deadline must be a dateTime.')
+            .optional({ checkFalsy: true }),
+
+        body('acceptingDeliveryTo')
+            .trim()
+            .isString()
+            .withMessage('Acceptable Delivery Deadline must be a dateTime.')
             .optional({ checkFalsy: true })
     ];
 };
