@@ -120,7 +120,6 @@ export const tripValidationRules = () => {
 
         // Acceptable Delivery Deadline
         // (Optional)
-
         body('acceptingDeliveryFrom')
             .trim()
             .isString()

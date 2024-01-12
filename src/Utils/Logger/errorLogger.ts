@@ -5,7 +5,6 @@ const { combine, timestamp, printf, colorize } = format;
 const myFormat = printf(({ level, message, timestamp: innerTimestamp }) => {
     return `${innerTimestamp}  ${level}: ${message}`;
 });
-
 interface ErrorLogFunction {
     (): Logger;
 }
@@ -20,7 +19,10 @@ export const devErrorLog: ErrorLogFunction = () => {
         ),
         transports: [
             new transports.Console(),
-            new transports.File({ filename: 'error.log', level: 'error' })
+            new transports.File({
+                filename: 'error.log',
+                level: 'error'
+            })
         ]
     });
 };
@@ -31,7 +33,10 @@ export const prodErrorLog: ErrorLogFunction = () => {
         format: combine(timestamp(), myFormat),
         transports: [
             new transports.Console(),
-            new transports.File({ filename: 'error.log', level: 'error' })
+            new transports.File({
+                filename: 'error.log',
+                level: 'error'
+            })
         ]
     });
 };

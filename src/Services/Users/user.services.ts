@@ -2,8 +2,11 @@ import { Request, NextFunction } from 'express';
 import { IUser, IProfile } from '../../Models/Users/user.model';
 import { userRepository } from '../../Repository/index';
 import AppError from '../../Utils/Errors/appError';
-import Utilities, { statusCode } from '../../Utils/helpers';
+import Utilities from '../../Utils/helpers';
 import Media from '../../Utils/media/media';
+import HttpStatusCode from '../../Utils/HttpStatusCode/httpStatusCode';
+
+const statusCode = new HttpStatusCode();
 
 const image = new Media();
 

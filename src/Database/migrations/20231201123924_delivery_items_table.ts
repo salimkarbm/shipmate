@@ -16,7 +16,7 @@ export async function up(knex: Knex): Promise<void> {
         table.json('itemDimension');
         table.string('itemSize');
         table.string('specialHandlingInstructions');
-        table.boolean('insuranceCoverage').defaultTo(false);
+        table.boolean('hasInsuranceCoverage').defaultTo(false);
         table.dateTime('deliveryDeadline').notNullable();
         table
             .enu('itemStatus', [

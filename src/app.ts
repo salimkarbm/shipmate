@@ -4,15 +4,25 @@ import path from 'path';
 
 // import express
 import express, { Application, Request, Response, NextFunction } from 'express';
-
 import AppError from './Utils/Errors/appError';
 import errorHandler from './Middlewares/Errors/errorMiddleware';
 import logger from './Utils/Logger/index';
 import routes from './Routes/index';
 import db from './Database/db.config';
-import { statusCode } from './Utils/helpers';
+import HttpStatusCode from './Utils/HttpStatusCode/httpStatusCode';
+
+const statusCode = new HttpStatusCode();
 
 dotenv.config({ path: './env' });
+
+// Initialize express
+const app: Application = express();
+
+process.on('uncaughtException', (err) => {
+    logger.error(err.name, err.message);
+    logger.info('UNCAUGHT EXCEPTION! shutting down...');
+    process.exit(1);
+});
 
 // Bind all Models to a knex instance
 db.dbSetup();
@@ -24,15 +34,10 @@ db.onDatabaseConnect()
             ? logger.info('Database connected')
             : logger.info('Database not connected');
     })
-    .catch((e: any) => logger.error(e));
-process.on('uncaughtException', (err) => {
-    logger.error(err.name, err.message);
-    logger.info('UNCAUGHT EXCEPTION! shutting down...');
-    process.exit(1);
-});
-
-// Initialize express
-const app: Application = express();
+    .catch((e: any) =>
+        // console.log(e)
+        logger.error(e)
+    );
 
 // Port
 const PORT: number = Number(process.env.PORT) || 5000;

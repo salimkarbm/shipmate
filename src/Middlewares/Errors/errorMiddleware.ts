@@ -1,8 +1,11 @@
 import dotenv from 'dotenv';
 import { NextFunction, Request, Response } from 'express';
 import AppError from '../../Utils/Errors/appError';
-import { statusCode } from '../../Utils/helpers';
 import logger from '../../Utils/Logger';
+
+import HttpStatusCode from '../../Utils/HttpStatusCode/httpStatusCode';
+
+const statusCode = new HttpStatusCode();
 
 dotenv.config({ path: './env' });
 

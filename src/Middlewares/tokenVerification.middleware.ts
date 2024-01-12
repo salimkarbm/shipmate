@@ -2,7 +2,10 @@ import { Request, NextFunction, Response } from 'express';
 import { JwtPayload } from 'jsonwebtoken';
 import UserRepository from '../Repository/Users/user.repository';
 import AppError from '../Utils/Errors/appError';
-import Utilities, { statusCode } from '../Utils/helpers';
+import Utilities from '../Utils/helpers';
+import HttpStatusCode from '../Utils/HttpStatusCode/httpStatusCode';
+
+const statusCode = new HttpStatusCode();
 
 const userRepository = new UserRepository();
 const util = new Utilities();

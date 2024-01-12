@@ -3,7 +3,10 @@ import { ITrip } from '../../Models/Trips/trip.model';
 import { IUser } from '../../Models/Users/user.model';
 import { tripRepository, userRepository } from '../../Repository/index';
 import AppError from '../../Utils/Errors/appError';
-import { statusCode } from '../../Utils/helpers';
+
+import HttpStatusCode from '../../Utils/HttpStatusCode/httpStatusCode';
+
+const statusCode = new HttpStatusCode();
 
 export default class TripService {
     public async findTrips(

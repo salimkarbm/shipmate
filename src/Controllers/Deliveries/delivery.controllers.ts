@@ -2,8 +2,11 @@ import { Request, Response, NextFunction } from 'express';
 import { IDeliveryItem } from '../../Models/Deliveries/delivery.model';
 import AppError from '../../Utils/Errors/appError';
 import { deliveryItemService } from '../../Services/index';
-import { statusCode } from '../../Utils/helpers';
 import logger from '../../Utils/Logger';
+
+import HttpStatusCode from '../../Utils/HttpStatusCode/httpStatusCode';
+
+const statusCode = new HttpStatusCode();
 
 export const addDeliveryItem = async (
     req: Request,

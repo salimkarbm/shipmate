@@ -2,8 +2,11 @@ import { Request, Response, NextFunction } from 'express';
 import { ITrip } from '../../Models/Trips/trip.model';
 import AppError from '../../Utils/Errors/appError';
 import { tripService } from '../../Services/index';
-import { statusCode } from '../../Utils/helpers';
 import logger from '../../Utils/Logger';
+
+import HttpStatusCode from '../../Utils/HttpStatusCode/httpStatusCode';
+
+const statusCode = new HttpStatusCode();
 
 export const addTrip = async (
     req: Request,

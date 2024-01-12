@@ -3,8 +3,6 @@ export default class AppError extends Error {
 
     isOperational: boolean;
 
-    // message: string;
-
     status: string;
 
     constructor(message: string | any, statusCode: number) {

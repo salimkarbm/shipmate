@@ -3,10 +3,12 @@ import { IDeliveryItem } from '../../Models/Deliveries/delivery.model';
 import { IUser } from '../../Models/Users/user.model';
 import { deliveryItemRepository, userRepository } from '../../Repository/index';
 import AppError from '../../Utils/Errors/appError';
-import { statusCode } from '../../Utils/helpers';
 import Media from '../../Utils/media/media';
 import ApiFeatures from '../../Utils/apiFeatures';
 import TABLE from '../../Models/index';
+import HttpStatusCode from '../../Utils/HttpStatusCode/httpStatusCode';
+
+const statusCode = new HttpStatusCode();
 
 const image = new Media();
 
