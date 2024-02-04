@@ -4,8 +4,6 @@ import { IUser } from '../../Models/Users/user.model';
 import { deliveryItemRepository, userRepository } from '../../Repository/index';
 import AppError from '../../Utils/Errors/appError';
 import Media from '../../Utils/media/media';
-import ApiFeatures from '../../Utils/apiFeatures';
-import TABLE from '../../Models/index';
 import HttpStatusCode from '../../Utils/HttpStatusCode/httpStatusCode';
 
 const statusCode = new HttpStatusCode();
@@ -17,13 +15,7 @@ export default class DeliveryItemService {
         req: Request,
         next: NextFunction
     ): Promise<IDeliveryItem[] | void> {
-        const features = new ApiFeatures(TABLE.ITEMS.query(), req.query)
-            .filter()
-            .paginate()
-            .sort()
-            .limit();
-        // EXECUTE QUERY
-        const deliveries = await features.dbQueryBulder;
+        const deliveries = await deliveryItemRepository.findDeliveryItems();
         return deliveries;
     }
 

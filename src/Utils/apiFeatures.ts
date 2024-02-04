@@ -14,17 +14,10 @@ export default class ApiFeatures {
         const excludeValues = ['limit', 'page', 'fields', 'sort'];
         excludeValues.forEach((el) => delete queryObj[el]);
 
-        // advance filtering
-        let queryString = JSON.stringify(queryObj);
-        queryString = queryString.replace(
-            /\b(gte|gt|lte|lt)\b/g,
-            (match) => `$${match}`
-        );
         this.dbQueryBulder
             .select('*')
-            .where(JSON.parse(queryString))
-            .withGraphFetched('users')
-            .withGraphFetched('trips');
+            .where(queryObj)
+            .withGraphFetched(['users', 'trips']);
         return this;
     }
 

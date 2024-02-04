@@ -51,7 +51,7 @@ const sendErrorDev = (err: AppError | any, res: Response) => {
     });
 };
 
-const sendErrorPro = (err: AppError | any, res: Response) => {
+const sendErrorProd = (err: AppError | any, res: Response) => {
     // operational error: send message to client
     if (err.isOperational) {
         res.status(err.statusCode).json({
@@ -78,16 +78,44 @@ export default (err: any, req: Request, res: Response, next: NextFunction) => {
     if (process.env.NODE_ENV === 'development') {
         sendErrorDev(err, res);
     } else if (process.env.NODE_ENV === 'production') {
-        // let error = { ...err };
-        // if (error.name === 'JsonWebTokenError') {
-        //     error = handleJWTError();
-        // }
-        // if (err.name === 'TokenExpiredError') error = handleJWTExpiredError();
-        // if (error.name === 'CastError') error = handleCastErrorDB(error);
-        // if (error.errors instanceof Array)
-        //     error = handleExpressValidatorError(error);
-        // if (error.code === 23505) error = handleDuplicateDBField(error);
+        sendErrorProd(err, res);
+        const error = { ...err };
+        if (error.name === 'ExpiredCodeException') {
+            const { message } = error;
+            const status = error.statusCode || 401;
 
-        sendErrorPro(err, res);
+            return res.status(status).json({
+                success: false,
+                message
+            });
+        }
+        if (error.name === 'Error') {
+            res.status(error.statusCode || 401);
+            return res.json({
+                success: false,
+                message: error.message
+            });
+        }
+        if (error.name === 'NotAuthorizedException') {
+            const status = error.statusCode || 401;
+            return res.status(status).json({
+                success: false,
+                error: error.message
+            });
+        }
+        if (error.name === 'TokenExpiredError') {
+            const status = error.statusCode || 401;
+            return res.status(status).json({
+                success: false,
+                error: error.message
+            });
+        }
+    } else {
+        return res.status(err.statusCode || 400).json({
+            success: false,
+            error: err.message,
+            message:
+                "This wasn't supposed to happen Our engineers are working on it. How about a fresh start?"
+        });
     }
 };

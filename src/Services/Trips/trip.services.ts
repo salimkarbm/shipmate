@@ -3,8 +3,9 @@ import { ITrip } from '../../Models/Trips/trip.model';
 import { IUser } from '../../Models/Users/user.model';
 import { tripRepository, userRepository } from '../../Repository/index';
 import AppError from '../../Utils/Errors/appError';
-
+import ApiFeatures from '../../Utils/apiFeatures';
 import HttpStatusCode from '../../Utils/HttpStatusCode/httpStatusCode';
+import TABLE from '../../Models/index';
 
 const statusCode = new HttpStatusCode();
 
@@ -13,7 +14,14 @@ export default class TripService {
         req: Request,
         next: NextFunction
     ): Promise<ITrip[] | void> {
-        const trips = await tripRepository.findTrips();
+        const features = new ApiFeatures(TABLE.ITEMS.query(), req.query)
+            .filter()
+            .paginate()
+            .sort()
+            .limit();
+
+        // EXECUTE QUERY
+        const trips = await features.dbQueryBulder;
         return trips as ITrip[];
     }
 
