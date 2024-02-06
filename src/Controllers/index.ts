@@ -31,6 +31,8 @@ import {
     findUserDeliveryItems
 } from './Deliveries/delivery.controllers';
 
+import { createWallet, findUserWallet } from './Wallets/wallet.controllers';
+
 export default {
     signUp,
     activateUserAccount,
@@ -53,5 +55,7 @@ export default {
     findDeliveryItem,
     findDeliveryItems,
     addDeliveryItem,
-    findUserDeliveryItems
+    findUserDeliveryItems,
+    createWallet,
+    findUserWallet
 };

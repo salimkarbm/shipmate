@@ -1,6 +1,6 @@
 import { Model } from 'objection';
 import { Car, ICar } from '../Cars/car.model';
-// import { Trip } from '../Trips/trip.model';
+import { Wallet } from '../Wallets/wallet.model';
 // import { Item } from '../Deliveries/delivery.model';
 
 export interface IUser {
@@ -54,6 +54,15 @@ export class User extends Model {
             join: {
                 from: 'users.userId',
                 to: 'cars.userId'
+            }
+        },
+
+        wallets: {
+            relation: Model.HasManyRelation,
+            modelClass: Wallet,
+            join: {
+                from: 'users.userId',
+                to: 'wallets.userId'
             }
         }
 

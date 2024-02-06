@@ -14,7 +14,7 @@ export async function up(knex: Knex): Promise<void> {
             table
                 .enum('status', ['Active', 'Inactive'])
                 .notNullable()
-                .defaultTo('active');
+                .defaultTo('Active');
             table
                 .uuid('userId')
                 .references('users.userId')

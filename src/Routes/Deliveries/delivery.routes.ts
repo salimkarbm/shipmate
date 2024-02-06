@@ -24,7 +24,7 @@ router
     .get(validate, item.findDeliveryItems);
 
 router
-    .route('/user/:userId')
+    .route('/:userId/user')
     .get(
         userIdValidationRules(),
         validate,
