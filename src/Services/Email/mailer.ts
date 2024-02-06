@@ -1,10 +1,8 @@
 import dotenv from 'dotenv';
 import nodemailer from 'nodemailer';
-import Utility from '../../Utils/helpers';
+import { util } from '../../Utils/helpers';
 
 dotenv.config({ path: '.env' });
-
-const util = new Utility();
 
 export interface Mail {
     email: string;

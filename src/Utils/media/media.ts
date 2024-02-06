@@ -4,7 +4,7 @@ import path from 'path';
 import fs from 'fs';
 import multer from 'multer';
 
-export default class Media {
+export class Media {
     public async cloudinaryUpload(url: string) {
         if (url) {
             cloudinary.config({
@@ -94,3 +94,5 @@ export default class Media {
         { name: 'file5', maxCount: 1 }
     ]);
 }
+
+export const media = new Media();

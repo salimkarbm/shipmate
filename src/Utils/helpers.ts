@@ -8,7 +8,7 @@ import logger from './Logger/index';
 
 const userRepository = new UserRepository();
 
-export default class Utilities {
+export class Utilities {
     private pepper = String(process.env.BCRYPT_PASSWORD);
 
     private saltRound = Number(process.env.SALT_ROUNDS);
@@ -133,3 +133,5 @@ export default class Utilities {
         return datetime;
     }
 }
+
+export const util = new Utilities();

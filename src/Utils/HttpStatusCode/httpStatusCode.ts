@@ -1,4 +1,4 @@
-export default class HttpStatusCode {
+export class HttpStatusCode {
     ok() {
         return 200;
     }
@@ -87,3 +87,5 @@ export default class HttpStatusCode {
         return 504;
     }
 }
+
+export const statusCode = new HttpStatusCode();

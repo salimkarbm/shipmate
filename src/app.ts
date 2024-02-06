@@ -9,9 +9,7 @@ import errorHandler from './Middlewares/Errors/errorMiddleware';
 import logger from './Utils/Logger/index';
 import routes from './Routes/index';
 import db from './Database/db.config';
-import HttpStatusCode from './Utils/HttpStatusCode/httpStatusCode';
-
-const statusCode = new HttpStatusCode();
+import { statusCode } from './Utils/HttpStatusCode/httpStatusCode';
 
 dotenv.config({ path: './env' });
 

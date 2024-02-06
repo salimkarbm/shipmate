@@ -2,15 +2,9 @@ import { Request, NextFunction } from 'express';
 import { IUser, IProfile } from '../../Models/Users/user.model';
 import { userRepository } from '../../Repository/index';
 import AppError from '../../Utils/Errors/appError';
-import Utilities from '../../Utils/helpers';
-import Media from '../../Utils/media/media';
-import HttpStatusCode from '../../Utils/HttpStatusCode/httpStatusCode';
-
-const statusCode = new HttpStatusCode();
-
-const image = new Media();
-
-const util = new Utilities();
+import { util } from '../../Utils/helpers';
+import { media } from '../../Utils/media/media';
+import { statusCode } from '../../Utils/HttpStatusCode/httpStatusCode';
 
 export default class UserService {
     public async findUsers(
@@ -121,16 +115,16 @@ export default class UserService {
                     new AppError('user not found', statusCode.notFound())
                 );
             }
-            const profilePicturePath = image.getFilePath(req);
+            const profilePicturePath = media.getFilePath(req);
             let cloudinary: any;
             if (profilePicturePath) {
                 if (user?.profilePictureId) {
                     // Delete the existing profile Picture using the correct profile Picture Id
-                    await image.cloudinaryDestroy(
+                    await media.cloudinaryDestroy(
                         user?.profilePictureId as string
                     );
                 }
-                cloudinary = await image.cloudinaryUpload(profilePicturePath);
+                cloudinary = await media.cloudinaryUpload(profilePicturePath);
                 if (!cloudinary) {
                     return next(
                         new AppError(
@@ -182,10 +176,10 @@ export default class UserService {
                     new AppError('user not found', statusCode.notFound())
                 );
             }
-            const carPhotoPath = image.getFilePath(req);
+            const carPhotoPath = media.getFilePath(req);
             let cloudinary: any;
             if (carPhotoPath) {
-                cloudinary = await image.cloudinaryUpload(carPhotoPath);
+                cloudinary = await media.cloudinaryUpload(carPhotoPath);
                 if (!cloudinary) {
                     return next(
                         new AppError(

@@ -1,23 +1,19 @@
 export default class ApiFeatures {
-    dbQueryBulder: any;
+    private dbQueryBulder: any;
 
-    reqQuery: any;
+    private reqQuery: any;
 
     constructor(dbQueryBulder: any, reqQuery: any) {
         this.dbQueryBulder = dbQueryBulder;
         this.reqQuery = reqQuery;
     }
 
-    filter() {
+    filter(model: string | [string]) {
         // filtering
         const queryObj = { ...this.reqQuery };
         const excludeValues = ['limit', 'page', 'fields', 'sort'];
         excludeValues.forEach((el) => delete queryObj[el]);
-
-        this.dbQueryBulder
-            .select('*')
-            .where(queryObj)
-            .withGraphFetched(['users', 'trips']);
+        this.dbQueryBulder.select('*').where(queryObj).withGraphFetched(model);
         return this;
     }
 
@@ -51,5 +47,9 @@ export default class ApiFeatures {
             this.dbQueryBulder = this.dbQueryBulder.select('*');
         }
         return this;
+    }
+
+    get dbQuery() {
+        return this.dbQueryBulder;
     }
 }

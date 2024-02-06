@@ -3,12 +3,8 @@ import { IDeliveryItem } from '../../Models/Deliveries/delivery.model';
 import { IUser } from '../../Models/Users/user.model';
 import { deliveryItemRepository, userRepository } from '../../Repository/index';
 import AppError from '../../Utils/Errors/appError';
-import Media from '../../Utils/media/media';
-import HttpStatusCode from '../../Utils/HttpStatusCode/httpStatusCode';
-
-const statusCode = new HttpStatusCode();
-
-const image = new Media();
+import { media } from '../../Utils/media/media';
+import { statusCode } from '../../Utils/HttpStatusCode/httpStatusCode';
 
 export default class DeliveryItemService {
     public async findDeliveryItems(
@@ -26,13 +22,12 @@ export default class DeliveryItemService {
         const { itemId } = req.params;
         const item: any =
             await deliveryItemRepository.findDeliveryItemById(itemId);
-
         if (typeof item === 'object' && item !== null) {
             item.users.OTP = 'undefined';
             item.users.otpExpiresAt = undefined;
             return item as IDeliveryItem;
         }
-        return next(new AppError('Trip not found', statusCode.notFound()));
+        return next(new AppError('Delivery not found', statusCode.notFound()));
     }
 
     public async addDeliveryItem(
@@ -48,7 +43,7 @@ export default class DeliveryItemService {
                     new AppError('user not found', statusCode.notFound())
                 );
             }
-            const itemImagePath = image.getFilePath(req);
+            const itemImagePath = media.getFilePath(req);
             if (!itemImagePath) {
                 return next(
                     new AppError(
@@ -57,7 +52,7 @@ export default class DeliveryItemService {
                     )
                 );
             }
-            const cloudinary = await image.cloudinaryUpload(itemImagePath);
+            const cloudinary = await media.cloudinaryUpload(itemImagePath);
             if (!cloudinary) {
                 return next(
                     new AppError(

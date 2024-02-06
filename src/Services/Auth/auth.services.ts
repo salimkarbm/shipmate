@@ -2,13 +2,11 @@ import { Request, Response, NextFunction } from 'express';
 import axios from 'axios';
 import { IUser } from '../../Models/Users/user.model';
 import AppError from '../../Utils/Errors/appError';
-import Utilities from '../../Utils/helpers';
+import { util } from '../../Utils/helpers';
 import { authRepository, userRepository } from '../../Repository/index';
 import { MalierService } from '../Email/mailer';
-import HttpStatusCode from '../../Utils/HttpStatusCode/httpStatusCode';
+import { statusCode } from '../../Utils/HttpStatusCode/httpStatusCode';
 
-const statusCode = new HttpStatusCode();
-const utils = new Utilities();
 const emailNotification = new MalierService();
 
 export default class AuthService {
@@ -39,8 +37,8 @@ export default class AuthService {
                 )
             );
         }
-        const hashPassword = await utils.generateHash(password);
-        const { OTP, otpExpiresAt } = await utils.generateOtpCode();
+        const hashPassword = await util.generateHash(password);
+        const { OTP, otpExpiresAt } = await util.generateOtpCode();
 
         const user: IUser = {
             firstName,
@@ -140,7 +138,7 @@ export default class AuthService {
             );
         }
         if (user) {
-            const checkPassword = await utils.comparePassword(
+            const checkPassword = await util.comparePassword(
                 password,
                 user.passwordDigest
             );
@@ -148,7 +146,7 @@ export default class AuthService {
                 /*
                   send a mail to the user email on successful login attempt
                 */
-                const { accessToken, refreshToken } = await utils.generateToken(
+                const { accessToken, refreshToken } = await util.generateToken(
                     user.email
                 );
                 if (accessToken && refreshToken) {
@@ -183,7 +181,7 @@ export default class AuthService {
         if (!user) {
             throw next(new AppError('User not found', statusCode.notFound()));
         }
-        const { OTP, otpExpiresAt } = await utils.generateOtpCode();
+        const { OTP, otpExpiresAt } = await util.generateOtpCode();
         const payload = {
             email,
             OTP,
@@ -213,10 +211,10 @@ export default class AuthService {
                 )
             );
         }
-        const isValid = await utils.verifyToken(email, token);
+        const isValid = await util.verifyToken(email, token);
         if (isValid) {
             const { accessToken, refreshToken } =
-                await utils.generateToken(email);
+                await util.generateToken(email);
             user.OTP = 'undefined';
             user.passwordDigest = 'undefined';
             user.passwordResetOtp = 'undefine';
@@ -240,7 +238,7 @@ export default class AuthService {
         if (!user) {
             throw next(new AppError('User not found', statusCode.notFound()));
         }
-        const { OTP, otpExpiresAt } = await utils.generateOtpCode();
+        const { OTP, otpExpiresAt } = await util.generateOtpCode();
 
         // send mail
         const emailData = await emailNotification.forgotPasswordMail({
@@ -331,7 +329,7 @@ export default class AuthService {
         return (async () => {
             let newUser;
             const password = 'undefine';
-            const hashPassword = await utils.generateHash(password);
+            const hashPassword = await util.generateHash(password);
             const payload: any = {
                 firstName: name[0],
                 lastName: name[1],
@@ -343,14 +341,14 @@ export default class AuthService {
             if (!user) {
                 newUser = await authRepository.signUp(payload);
                 // await authRepository.updateUserIsVerified(user.email);
-                const { accessToken, refreshToken } = await utils.generateToken(
+                const { accessToken, refreshToken } = await util.generateToken(
                     newUser.email
                 );
                 return { accessToken, refreshToken, newUser };
             }
             if (user) {
                 newUser = await userRepository.findUserByEmail(user.email);
-                const { accessToken, refreshToken } = await utils.generateToken(
+                const { accessToken, refreshToken } = await util.generateToken(
                     user.email
                 );
                 return { accessToken, refreshToken, newUser };

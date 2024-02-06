@@ -4,9 +4,7 @@ import AppError from '../../Utils/Errors/appError';
 import { deliveryItemService } from '../../Services/index';
 import logger from '../../Utils/Logger';
 
-import HttpStatusCode from '../../Utils/HttpStatusCode/httpStatusCode';
-
-const statusCode = new HttpStatusCode();
+import { statusCode } from '../../Utils/HttpStatusCode/httpStatusCode';
 
 export const addDeliveryItem = async (
     req: Request,

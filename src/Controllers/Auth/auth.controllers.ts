@@ -2,9 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import AppError from '../../Utils/Errors/appError';
 import { authService } from '../../Services/index';
 import logger from '../../Utils/Logger';
-import HttpStatusCode from '../../Utils/HttpStatusCode/httpStatusCode';
-
-const statusCode = new HttpStatusCode();
+import { statusCode } from '../../Utils/HttpStatusCode/httpStatusCode';
 
 export const signUp = async (
     req: Request,

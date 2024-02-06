@@ -9,9 +9,7 @@ import {
     carValidationRules
 } from '../../Middlewares/Users/user.middlewares';
 import user from '../../Controllers/index';
-import Media from '../../Utils/media/media';
-
-const image = new Media();
+import { media } from '../../Utils/media/media';
 
 const router = Router();
 
@@ -32,7 +30,7 @@ router
 router
     .route('/addCar')
     .post(
-        image.upload.single('carPhoto'),
+        media.upload.single('carPhoto'),
         carValidationRules(),
         validate,
         authenticate,
@@ -44,7 +42,7 @@ router.route('/viewProfile').get(authenticate, validate, user.viewUserProfile);
 router
     .route('/updateMe')
     .patch(
-        image.upload.single('profilePicture'),
+        media.upload.single('profilePicture'),
         userProfileUpdateValidationRules(),
         validate,
         authenticate,

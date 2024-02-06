@@ -4,10 +4,8 @@ import { IUser } from '../../Models/Users/user.model';
 import { tripRepository, userRepository } from '../../Repository/index';
 import AppError from '../../Utils/Errors/appError';
 import ApiFeatures from '../../Utils/apiFeatures';
-import HttpStatusCode from '../../Utils/HttpStatusCode/httpStatusCode';
+import { statusCode } from '../../Utils/HttpStatusCode/httpStatusCode';
 import TABLE from '../../Models/index';
-
-const statusCode = new HttpStatusCode();
 
 export default class TripService {
     public async findTrips(
@@ -15,13 +13,13 @@ export default class TripService {
         next: NextFunction
     ): Promise<ITrip[] | void> {
         const features = new ApiFeatures(TABLE.ITEMS.query(), req.query)
-            .filter()
+            .filter('users')
             .paginate()
             .sort()
             .limit();
 
         // EXECUTE QUERY
-        const trips = await features.dbQueryBulder;
+        const trips = await features.dbQuery;
         return trips as ITrip[];
     }
 
@@ -31,7 +29,6 @@ export default class TripService {
     ): Promise<ITrip | void> {
         const { tripId } = req.params;
         const trip: ITrip | null = await tripRepository.findTripById(tripId);
-
         if (typeof trip === 'object' && trip !== null) {
             trip.users.OTP = 'undefined';
             trip.users.otpExpiresAt = undefined;

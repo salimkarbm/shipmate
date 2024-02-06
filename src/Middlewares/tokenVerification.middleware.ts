@@ -2,13 +2,10 @@ import { Request, NextFunction, Response } from 'express';
 import { JwtPayload } from 'jsonwebtoken';
 import UserRepository from '../Repository/Users/user.repository';
 import AppError from '../Utils/Errors/appError';
-import Utilities from '../Utils/helpers';
-import HttpStatusCode from '../Utils/HttpStatusCode/httpStatusCode';
-
-const statusCode = new HttpStatusCode();
+import { util } from '../Utils/helpers';
+import { statusCode } from '../Utils/HttpStatusCode/httpStatusCode';
 
 const userRepository = new UserRepository();
-const util = new Utilities();
 
 const authenticate = async (
     req: Request,

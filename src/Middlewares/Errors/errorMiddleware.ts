@@ -2,45 +2,9 @@ import dotenv from 'dotenv';
 import { NextFunction, Request, Response } from 'express';
 import AppError from '../../Utils/Errors/appError';
 import logger from '../../Utils/Logger';
-
-import HttpStatusCode from '../../Utils/HttpStatusCode/httpStatusCode';
-
-const statusCode = new HttpStatusCode();
+import { statusCode } from '../../Utils/HttpStatusCode/httpStatusCode';
 
 dotenv.config({ path: './env' });
-
-// const handleJWTExpiredError = () => {
-//     return new AppError(
-//         'Your token has expired! please log in again',
-//         statusCode.unauthorized()
-//     );
-// };
-
-// const handleJWTError = () => {
-//     return new AppError(
-//         'Invalid token. please log in again ',
-//         statusCode.unauthorized()
-//     );
-// };
-
-// const handleCastErrorDB = (err: AppError | any) => {
-//     const message = `Invalid ${err.path}:${err.value}.`;
-//     return new AppError(message, 400);
-// };
-
-// const handleDuplicateDBField = (err: AppError | any) => {
-//     const message = err.detail;
-//     return new AppError(message, statusCode.notFound());
-// };
-
-// const handleExpressValidatorError = (err: AppError | any) => {
-//     const errors = err.errors.map((el: any) => {
-//         const result = Object.values(el);
-//         return result[2];
-//     });
-//     const message = `Invalid input data ${errors.join(', ')}.`;
-//     return new AppError(message, statusCode.notFound());
-// };
 
 const sendErrorDev = (err: AppError | any, res: Response) => {
     res.status(err.statusCode).json({

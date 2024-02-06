@@ -4,9 +4,7 @@ import AppError from '../../Utils/Errors/appError';
 import { tripService } from '../../Services/index';
 import logger from '../../Utils/Logger';
 
-import HttpStatusCode from '../../Utils/HttpStatusCode/httpStatusCode';
-
-const statusCode = new HttpStatusCode();
+import { statusCode } from '../../Utils/HttpStatusCode/httpStatusCode';
 
 export const addTrip = async (
     req: Request,
@@ -39,12 +37,12 @@ export const findTrips = async (
     next: NextFunction
 ) => {
     try {
-        const trip: ITrip[] | void = await tripService.findTrips(req, next);
+        const trips: ITrip[] | void = await tripService.findTrips(req, next);
         return res.status(statusCode.ok()).json({
             status: 'success',
             message: 'Trips Fetch successfully',
             data: {
-                trip
+                trips
             }
         });
     } catch (err) {
