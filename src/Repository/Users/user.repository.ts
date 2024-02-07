@@ -6,6 +6,7 @@ export default class UserRepository {
     async findUserById(userId: string): Promise<IUser | null> {
         const user: any = await TABLE.USERS.query()
             .where('userId', userId)
+            .withGraphFetched('wallets')
             .withGraphFetched('cars');
         if (user.length > 0) {
             return user[0];

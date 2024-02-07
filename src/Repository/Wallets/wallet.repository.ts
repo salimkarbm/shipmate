@@ -8,9 +8,7 @@ export default class WalletRepository {
     }
 
     async findWalletByUserId(userId: string): Promise<IWallet | null> {
-        const wallet: any = await TABLE.WALLET.query()
-            .where('userId', userId)
-            .withGraphFetched('users');
+        const wallet: any = await TABLE.WALLET.query().where('userId', userId);
         if (wallet.length > 0) {
             return wallet[0];
         }

@@ -2,6 +2,7 @@ import { Model } from 'objection';
 import { Car, ICar } from '../Cars/car.model';
 import { Wallet } from '../Wallets/wallet.model';
 // import { Item } from '../Deliveries/delivery.model';
+// import { Trip } from '../Trips/trip.model';
 
 export interface IUser {
     userId?: string;
@@ -56,7 +57,6 @@ export class User extends Model {
                 to: 'cars.userId'
             }
         },
-
         wallets: {
             relation: Model.HasManyRelation,
             modelClass: Wallet,
@@ -65,7 +65,6 @@ export class User extends Model {
                 to: 'wallets.userId'
             }
         }
-
         // trips: {
         //     relation: Model.HasManyRelation,
         //     modelClass: Trip,
@@ -74,7 +73,6 @@ export class User extends Model {
         //         to: 'trips.userId'
         //     }
         // },
-
         // items: {
         //     relation: Model.HasManyRelation,
         //     modelClass: Item,
