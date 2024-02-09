@@ -1,8 +1,7 @@
 import { Model } from 'objection';
 import { Car, ICar } from '../Cars/car.model';
 import { Wallet } from '../Wallets/wallet.model';
-// import { Item } from '../Deliveries/delivery.model';
-// import { Trip } from '../Trips/trip.model';
+import { Transaction } from '../Transactions/transaction.model';
 
 export interface IUser {
     userId?: string;
@@ -63,23 +62,16 @@ export class User extends Model {
             join: {
                 from: 'users.userId',
                 to: 'wallets.userId'
+            },
+            // Transactions should be nested under wallets
+            transactions: {
+                relation: Model.HasManyRelation,
+                modelClass: Transaction,
+                join: {
+                    from: 'wallets.walletId',
+                    to: 'transactions.walletId'
+                }
             }
         }
-        // trips: {
-        //     relation: Model.HasManyRelation,
-        //     modelClass: Trip,
-        //     join: {
-        //         from: 'users.userId',
-        //         to: 'trips.userId'
-        //     }
-        // },
-        // items: {
-        //     relation: Model.HasManyRelation,
-        //     modelClass: Item,
-        //     join: {
-        //         from: 'users.userId',
-        //         to: 'items.userId'
-        //     }
-        // }
     };
 }

@@ -3,6 +3,8 @@ import axios from 'axios';
 import crypto from 'crypto';
 import AppError from '../../Utils/Errors/appError';
 import { statusCode } from '../../Utils/HttpStatusCode/httpStatusCode';
+import { walletService } from '../index';
+import { userRepository } from '../../Repository';
 
 export class PaystackService {
     private PAYSTACK_SECERT_KEY = process.env.PAYSTACK_SECERT_KEY;
@@ -14,13 +16,21 @@ export class PaystackService {
         next: NextFunction
     ): Promise<any> {
         const { userId, email } = req.user;
+        const user: any = await userRepository.findUserById(userId as string);
+        if (!user.wallets.walletId) {
+            return next(
+                new AppError('Wallet not found', statusCode.badRequest())
+            );
+        }
         if (userId) {
             const transactionDetails = {
                 email,
                 amount: req.body.amount * 100,
                 metadata: {
-                    walletId: req.body.walletId,
-                    userId
+                    userId,
+                    walletId: user.wallets.walletId,
+                    transactionType: 'Credit',
+                    transactionStatus: 'Complete'
                 }
             };
             if (transactionDetails.amount <= 0) {
@@ -86,15 +96,27 @@ export class PaystackService {
             );
         }
         if (eventData.event === 'charge.success') {
-            const transactionId = eventData.data.id;
-            const { walletId } = eventData.data.metadata;
+            const { userId, walletId, transactionType, transactionStatus } =
+                eventData.data.metadata;
             // Acknowledge receiving the webhook
             res.sendStatus(200);
-            // Process the successful transaction to update Enrollment Model
-            console.log({
-                trx: `Transaction ${transactionId} was successful`,
-                data: walletId
-            });
+            // Process the successful transaction to update wallet Model
+            const payload: any = {
+                transactionId: eventData.data.id,
+                transactionReference: eventData.data.reference,
+                amount: (eventData.data.amount / 100) as number,
+                currency: eventData.data.currency,
+                transactionFee: (eventData.data.fees / 100) as number,
+                status: eventData.data.status,
+                transactionMethod: eventData.data.channel,
+                description: eventData.data.message || eventData.data.reason,
+                transactionType,
+                transactionStatus,
+                walletId,
+                paidAt: eventData.data.paid_at
+            };
+
+            await walletService.fundWallet(payload, userId, next);
         }
     }
 }

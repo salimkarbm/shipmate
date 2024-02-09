@@ -12,13 +12,10 @@ export const createWallet = async (
     next: NextFunction
 ) => {
     try {
-        const wallet = await walletService.createWallet(req, next);
+        await walletService.createWallet(req, next);
         return res.status(statusCode.created()).json({
             status: 'success',
-            message: 'Wallet created successfully.',
-            data: {
-                wallet
-            }
+            message: 'Wallet created successfully.'
         });
     } catch (err) {
         logger.error('unable to create Wallet', err);
@@ -49,7 +46,6 @@ export const findUserWallet = async (
             }
         });
     } catch (err) {
-        console.log(err);
         logger.error('unable to find Wallet', err);
         return next(
             new AppError(

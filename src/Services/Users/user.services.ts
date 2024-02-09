@@ -21,6 +21,7 @@ export default class UserService {
     ): Promise<IUser | void> {
         const { userId } = req.params;
         const user = await userRepository.findUserById(userId);
+        console.log(user);
         if (typeof user === 'object' && user !== null) {
             return user as IUser;
         }

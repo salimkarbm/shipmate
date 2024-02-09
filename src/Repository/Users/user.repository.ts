@@ -6,8 +6,7 @@ export default class UserRepository {
     async findUserById(userId: string): Promise<IUser | null> {
         const user: any = await TABLE.USERS.query()
             .where('userId', userId)
-            .withGraphFetched('wallets')
-            .withGraphFetched('cars');
+            .withGraphFetched('[wallets.[transactions], cars]');
         if (user.length > 0) {
             return user[0];
         }
@@ -61,7 +60,6 @@ export default class UserRepository {
         userId: string
     ): Promise<null | IUser> {
         const user: any = await TABLE.USERS.query()
-
             .where('userId', '=', userId)
             .update(payload)
             .returning('*');

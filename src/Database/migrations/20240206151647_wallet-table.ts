@@ -26,16 +26,16 @@ export async function up(knex: Knex): Promise<void> {
         .createTable('transactions', (table) => {
             table.increments('id');
             table
-                .uuid('TransactionId')
+                .uuid('transactionId')
                 .primary()
                 .defaultTo(knex.raw('uuid_generate_v4()'));
             table.bigInteger('amount');
             table.enum('transactionType', ['Credit', 'Debit']);
             table.text('description');
-            table.string('TransactionReference');
-            table.bigint('TransactionFee');
+            table.string('transactionReference');
+            table.bigInteger('transactionFee');
             table.enum('transactionStatus', ['Complete', 'Pending']);
-            table.enum('transactionMethod', ['Card', 'Bank Transfer']);
+            table.enum('transactionMethod', ['card', 'bank transfer']);
             table
                 .uuid('walletId')
                 .references('wallets.walletId')

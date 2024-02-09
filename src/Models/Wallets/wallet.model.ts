@@ -1,14 +1,15 @@
 import { Model } from 'objection';
-import { User } from '../Users/user.model';
+import { Transaction } from '../Transactions/transaction.model';
 
 export interface IWallet {
-    userId: string;
+    userId?: string;
     balance?: number;
     createdAt?: string;
     currency?: string;
     status?: string;
     updatedAt?: string;
-    bankAccountNumber: string;
+    bankAccountNumber?: string;
+    transactionReference?: string;
 }
 
 export class Wallet extends Model {
@@ -21,12 +22,12 @@ export class Wallet extends Model {
     }
 
     static relationMappings = {
-        users: {
-            relation: Model.BelongsToOneRelation,
-            modelClass: User,
+        transactions: {
+            relation: Model.HasManyRelation,
+            modelClass: Transaction,
             join: {
-                from: 'wallets.userId',
-                to: 'users.userId'
+                from: 'wallets.walletId',
+                to: 'transactions.walletId'
             }
         }
     };
