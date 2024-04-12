@@ -12,7 +12,7 @@ export default class TripService {
         req: Request,
         next: NextFunction
     ): Promise<ITrip[] | void> {
-        const features = new ApiFeatures(TABLE.ITEMS.query(), req.query)
+        const features = new ApiFeatures(TABLE.TRIPS.query(), req.query)
             .filter('users')
             .paginate()
             .sort()

@@ -30,8 +30,12 @@ export default class ApiFeatures {
     // sorting
     sort() {
         if (this.reqQuery.sort) {
-            const sortBy = this.reqQuery.sort.split(',').join(' ');
-            this.dbQueryBulder = this.dbQueryBulder.orderBy(sortBy, 'desc');
+            const sortBy = this.reqQuery.sort.split(',');
+            const sortOrder = sortBy.map((column: any) => ({
+                column,
+                order: 'desc'
+            }));
+            this.dbQueryBulder = this.dbQueryBulder.orderBy(sortOrder);
         } else {
             this.dbQueryBulder = this.dbQueryBulder.orderBy('createdAt');
         }
@@ -41,7 +45,10 @@ export default class ApiFeatures {
     limit() {
         // field limiting or projecting
         if (this.reqQuery.fields) {
-            const fields = this.reqQuery.fields.split(',').join(' ');
+            const { tableName } = this.dbQueryBulder.modelClass();
+            const fields = this.reqQuery.fields
+                .split(',')
+                .map((field: string) => `${tableName}.${field.trim()}`);
             this.dbQueryBulder = this.dbQueryBulder.select(fields);
         } else {
             this.dbQueryBulder = this.dbQueryBulder.select('*');

@@ -21,7 +21,6 @@ export default class UserService {
     ): Promise<IUser | void> {
         const { userId } = req.params;
         const user = await userRepository.findUserById(userId);
-        console.log(user);
         if (typeof user === 'object' && user !== null) {
             return user as IUser;
         }
@@ -150,16 +149,14 @@ export default class UserService {
                     cloudinary?.public_id || user?.profilePictureId
             };
 
-            const updatedUser: any = await userRepository.updateUser(
-                payload,
-                userId
-            );
-            if (updatedUser.userType.toLowerCase() === 'traveller') {
-                const updatedUserProfile: any =
-                    await userRepository.updateIsProfileCompleteToTrue(userId);
-                return updatedUserProfile;
-            }
-            return updatedUser;
+            const updateUser = userRepository.updateUser(payload, userId);
+            const updatedUserProfile: any =
+                userRepository.updateIsProfileCompleteToTrue(userId);
+            const promises = await Promise.all([
+                updatedUserProfile,
+                updateUser
+            ]);
+            return promises[0];
         }
         throw next(new AppError('Not authorized', statusCode.unauthorized()));
     }
